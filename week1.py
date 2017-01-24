@@ -1,10 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 23 10:33:39 2017
-
-@author: yaojie
-"""
 # 1
 print type("This is the first Week!")
 print "This is the first Week!"
@@ -36,7 +29,7 @@ print type(str(int(9.81)))
 
 # 3
 """
- 3ai)
+ name 'pi' is not defined
  name 'pi' is not defined
  3.14159
  3.14
