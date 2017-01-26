@@ -6,11 +6,8 @@ from random import randint
 
 # This function calculates the average score.
 def average(marks):
-    # lambdas will be covered in week 5.
-    # https://docs.python.org/2/tutorial/controlflow.html#lambda-expressions
-    # reduce takes in a list and "compresses" it with a function, in this case a lambda.
-    # It is then divided by the length of the marks to get the average mark across all marks.
-    return reduce(lambda x,y: x+y, marks) / len(marks)
+    # Sum of marks is divided by the length of the marks to get the average mark across all marks.
+    return sum(marks) / len(marks)
 
 # This function prints out the average score.
 def printAverage(name, id, marks):
@@ -49,7 +46,10 @@ def printGradeArray(students):
 # If you have trouble understanding the code, feel free to approach me and I'll explain it to you!
 
 students = []
+
 for i in range(1,41):
     students.append({"id": i, "name": names.get_full_name(), "marks": [randint(0,100) for _ in range(3)]})
+
+# students.append({"id": raw_input("enter id"), "name": raw_input("enter name"), "marks": [int(raw_input("marks")) for _ in range(3)]})
 
 printGradeArray(students)
