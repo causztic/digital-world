@@ -24,7 +24,7 @@ class Student:
             self.grade = 'D'
 
     def averageMarks(self):
-        return reduce(lambda x,y: x+y, self.marks) / len(self.marks)
+        return sum(self.marks) / len(self.marks)
 
     def printAverageMarks(self):
         print "{} of id {} has scored an average of {}".format(self.name, self.id, self.averageMarks())
