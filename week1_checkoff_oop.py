@@ -1,13 +1,14 @@
 # This is exactly the same as week1_checkoff except it is object oriented.
+# It can be improved with properties! https://www.programiz.com/python-programming/property
 
 import names
 from random import randint
 
 class Student:
 
-    def __init__(self, name, id, marks):
+    def __init__(self, name, uid, marks):
         self.name = name
-        self.id = id
+        self.uid = uid
         self.marks = marks
         self.setGrade()
 
@@ -27,14 +28,14 @@ class Student:
         return sum(self.marks) / len(self.marks)
 
     def printAverageMarks(self):
-        print "{} of id {} has scored an average of {}".format(self.name, self.id, self.averageMarks())
+        print "{} of uid {} has scored an average of {}".format(self.name, self.uid, self.averageMarks())
 
     def printPassOrFail(self):
         result = ( "Pass" if self.averageMarks() >= 50 else "Fail" )
-        print "{} of id {} has has a result of {}".format(self.name, self.id, result)
+        print "{} of uid {} has has a result of {}".format(self.name, self.uid, result)
 
     def printGrade(self):
-        print "{} of id {} has an average grade of {} and grade of {}".format(self.id, self.name, self.averageMarks(), self.grade)
+        print "{} of uid {} has an average grade of {} and grade of {}".format(self.uid, self.name, self.averageMarks(), self.grade)
 
 def printGradeArray(students):
     for i in students:
