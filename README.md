@@ -1,4 +1,4 @@
-YAO JIE IS AWESOME!
+IVAN IS AWESOME!
 # Digital World
 
 This repository will be updated at the end of every week with code for each Problem Set, and comments to explain the code if necessary.
