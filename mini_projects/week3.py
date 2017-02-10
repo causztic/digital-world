@@ -28,9 +28,9 @@ while True:
     # turn off the LED at GPIO24 and blink the LED at GPIO23. When the switch
     # is opened, turn off the LED at GPIO23 and blink the LED at GPIO24. The
     # blink interval should be 1 second.
-    if GPIO.input(switch):
+    if GPIO.input(switch) == GPIO.HIGH:
         GPIO.output(led[1], False)
         blink(led[0], 1)
     else:
-        GIO.output(led[0], False)
+        GPIO.output(led[0], False)
         blink(led[1], 1)
