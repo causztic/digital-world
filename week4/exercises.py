@@ -12,7 +12,7 @@ def interlock(word1, word2, word3):
     # do not check if incorrect length
     if len(word1) + len(word2) != len(word3):
         return False
-    
+
     while count < len(word3):
         if count % 2 == 0:
             if word1[count/2] != word3[count]:
@@ -51,7 +51,7 @@ def game(r, N):
 
 def f(t,y):
     return 4.0 - t + 2.0*y
-    
+
 # runge-kutta
 def approx_ode2(h,t0,y0,tn):
     y = y0
@@ -60,5 +60,5 @@ def approx_ode2(h,t0,y0,tn):
         y = y + h*(0.5*f(t,y)+0.5*f(t+h, y)+h*f(t,y))
         t += h
     return round(y,3)
-    
+
 print approx_ode2(0.1,0,1,1)
