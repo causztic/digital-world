@@ -15,7 +15,7 @@ GPIO.setup(led, GPIO.OUT)
 GPIO.setup(switch, GPIO.IN, GPIO.PUD_DOWN)
 
 def blink(gpio_number, duration):
-    blink = False
+    blink = True
     '''This function takes in two input: gpio_number and duration. The
     gpio_number specifies the GPIO number which the LED (to be blinked) is
     connected to. The duration is the blink interval in seconds.'''
