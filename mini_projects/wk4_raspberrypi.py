@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 from time import sleep
 from firebase import firebase
 
-url = "Replace me" # URL to Firebase database
-token = "Replace me" # unique token used for authentication
+url = "https://ebot-ac352.firebaseio.com/" # URL to Firebase database
+token = "QwU8aMuyxCQk3lNH3Lh66chvmeMjnv7kRuixeTQB" # unique token used for authentication
 
 # Create a firebase object by specifying the URL of the database and its secret token.
 # The firebase object has functions put and get, that allows user to put data onto 
@@ -29,7 +29,20 @@ while not done:
     # the OK button is pressed, the program exits the while loop and writes the
     # movement_list to the Firebase database. If any of the directional buttons
     # are pressed, the commands should be stored in the movement_list.
-
+    if buttons['left'] == GPIO.High:
+        movement_list.append('left')
+        print 'left'
+    if buttons['up'] == GPIO.High:
+        movement_list.append('up')
+        print 'up'
+    if buttons['right'] == GPIO.High:
+        movement_list.append('right')
+        print 'right'
+    if buttons['ok'] == GPIO.High:
+        print 'Execute'
+        firebase.put('/','movement',movement_list)
+        movement_list = []
+    sleep(0.1)
     # Write your code here
     pass
 
