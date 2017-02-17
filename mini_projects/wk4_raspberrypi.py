@@ -29,22 +29,16 @@ while not done:
     # the OK button is pressed, the program exits the while loop and writes the
     # movement_list to the Firebase database. If any of the directional buttons
     # are pressed, the commands should be stored in the movement_list.
-    if buttons['left'] == GPIO.High:
-        movement_list.append('left')
-        print 'left'
-    if buttons['up'] == GPIO.High:
-        movement_list.append('up')
-        print 'up'
-    if buttons['right'] == GPIO.High:
-        movement_list.append('right')
-        print 'right'
+    for action in ['left', 'right', 'up']:
+        if buttons[action] == GPIO.High:
+            movement_list.append(action)
+            print action
+
     if buttons['ok'] == GPIO.High:
         print 'Execute'
         firebase.put('/','movement',movement_list)
         movement_list = []
     sleep(0.1)
-    # Write your code here
-    pass
 
 
 # Write to database once the OK button is pressed
