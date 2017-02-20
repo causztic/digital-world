@@ -15,6 +15,11 @@ class Minesweeper:
     IS_A_BOMB = True
     NOT_A_BOMB = False
     
+    # Unicode just to look pretty
+    FLAG = u'\u2691'
+    BOMB = u'\U0001F4A3'
+    EXPLOSION = u'\U0001F4A5'
+    
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
     def __init__(self, height, width, mines):
@@ -27,23 +32,48 @@ class Minesweeper:
         self.final_table = self.generate_answer()
 
     @staticmethod
-    def print_table(table):
+    def print_table(table, exploded_at=[-1,-1]):
         """prints the table, regardless whether it's a game state table or the answer table."""
+        
+        # color codes just to look pretty
+        NORMAL = '\33[10m'
+        BLUE_START = '\33[104m'
+        RED_START = '\33[31m'
+        GREEN_START = '\33[92m'
+        END = '\033[0m'
+        
         width = len(table[0])
         height = len(table)
-        s = '\t'
+        s = '    %s' % BLUE_START
         
         # print number headers along x-axis
         for i in range(0, width):
-            s += str(i) + "\t"
+            s += " %s" % i
+            if i < 10:
+                s += " "*2
+            else:
+                s += " "
 
-        s += "\n"
-
+        s += "%s\n" % END
         # print letters for y-axis, + the relevant values in each coordinate depending on table.
         for y in range(0, height):
-            s += (Minesweeper.letters[y] + "\t")
-            for x in range(0, width): 
-                s += table[y][x] + "\t"
+            s += "%s %s %s \t" % (BLUE_START, Minesweeper.letters[y], END)
+            for x in range(0, width):
+                value = table[y][x]
+                if value == "-":
+                    s += "%s%s%s" % (NORMAL, value, END)
+                elif value == Minesweeper.BOMB:
+                    if y == exploded_at[0] and x == exploded_at[1]:
+                        # Make the bomb at the casualty site explode!
+                        s += "%s%s%s" % (RED_START, Minesweeper.EXPLOSION, END)
+                    else:
+                        # show normal bomb
+                        s += "%s%s%s" % (RED_START, value, END)
+                elif value == Minesweeper.FLAG:
+                    s += "%s%s%s" % (RED_START, value, END)
+                else:
+                    s += "%s%s%s" % (GREEN_START, value, END)
+                s += " "*3
             s += "\n"
         
         # use tabbing to space them nicely
@@ -73,7 +103,7 @@ class Minesweeper:
     def get_neighbour(self, y, x):
         """populate answer table with numbers and mines"""
         if [y, x] in self.mine_locations:
-            return "*"
+            return Minesweeper.BOMB
         count = 0
         # (x-1, y-1), (x, y-1), (x+1, y-1), 
         #  (x-1, y),  (x, y),   (x+1, y),
@@ -107,7 +137,7 @@ class Minesweeper:
         for i in [item for sublist in self.table_state for item in sublist]:
             if i == '-':
                 count += 1
-            if i == '?':
+            if i == Minesweeper.FLAG:
                 count += 1
                 flag_count += 1
         print "%d tiles remaining. (%d flagged)" % (count - flag_count, flag_count)
@@ -115,7 +145,7 @@ class Minesweeper:
     
     def flag(self, y, x):
         """set a flag to the desired coordinates."""
-        self.table_state[Minesweeper.letters.index(y)][x] = "?"
+        self.table_state[Minesweeper.letters.index(y)][x] = Minesweeper.FLAG
         Minesweeper.print_table(self.table_state)
 
     def tease_user(self,y, x):
@@ -129,9 +159,9 @@ class Minesweeper:
 
         self.print_table(self.table_state)
         
-    def show_answer_board(self):
+    def show_answer_board(self, coords):
         """prints the answer table with print_table."""
-        Minesweeper.print_table(self.final_table)
+        Minesweeper.print_table(self.final_table,coords)
     
     def open_tile(self, y, x):
         """opens a tile at the respective coordinates on the table_state list."""
@@ -140,7 +170,7 @@ class Minesweeper:
         # Checks if it is a mine
         if [y,x] in self.mine_locations:
             # explode
-            self.show_answer_board()
+            self.show_answer_board([y,x])
             print "Boomz."
             return Minesweeper.IS_A_BOMB
         else:
@@ -156,9 +186,14 @@ print "Opening a tile: o*#"
 print "Flag a tile:    f*#"
 print "exit: exit"
 
-height = raw_input("Height (1 to 26), defaults to 10: ") or 10
-width  = raw_input("Width (1 to 100), defaults to 30: ") or 30
-mines  = raw_input("Number of mines, defaults to 20: ") or 20
+default_height = 15
+default_width  = 15
+default_mines  = 15
+height = raw_input("Height (1 to 26), defaults to %d: " % default_height) or default_height
+width  = raw_input("Width (1 to 100), defaults to %d: " % default_width)  or default_width
+mines  = raw_input("Number of mines, defaults to %d: " % default_mines)   or default_mines
+
+print ''
 
 ms = Minesweeper(height, width, mines)
 Minesweeper.print_table(ms.table_state)
@@ -166,15 +201,19 @@ Minesweeper.print_table(ms.table_state)
 # listen to commands by user.
 while True:
     command = raw_input("Command: ")
-    if command == "exit":
-        break
-    elif 'o' == command[0]:
-        # open a tile
-        # ms.open_tile checks whether it's a bomb
-        if ms.open_tile(command[1], int(command[2:])) == Minesweeper.IS_A_BOMB:
+    try:
+        if command == "exit":
             break
-    elif 'f' == command[0]:
-        ms.flag(command[1], int(command[2:]))
-    if ms.check_status() == Minesweeper.WIN:
-        print "You win!"
-        break
+        elif 'o' == command[0]:
+            # open a tile
+            # ms.open_tile checks whether it's a bomb
+            if ms.open_tile(command[1], int(command[2:])) == Minesweeper.IS_A_BOMB:
+                break
+        elif 'f' == command[0]:
+            ms.flag(command[1], int(command[2:]))
+        if ms.check_status() == Minesweeper.WIN:
+            ms.show_answer_board([-1,-1])
+            print "You win!"
+            break
+    except:
+        print "Whoops, try again!"
