@@ -6,6 +6,7 @@ Created on Mon Feb 20 11:15:50 2017
 @author: yaojie
 """
 import random
+import sys
 from copy import deepcopy
 
 class Minesweeper:
@@ -125,10 +126,37 @@ class Minesweeper:
                     count += 1
         return str(count)
     
+    def flags_nearby(self, y, x):
+        """ gets number of flags nearby """
+        count = 0
+        l = [[ye, xe] for xe in range(x-1,x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
+        for ye,xe in l:
+            if xe >= self.x or ye >= self.y:
+                continue
+            if self.table_state[ye][xe] == Minesweeper.FLAG:
+                count += 1
+        return str(count)
+        
+    def special_open_neighbours(self, y, x):
+        """Open neighbours if the flag number matches the count."""
+        if self.table_state[y][x] != "-" and self.table_state[y][x] == self.flags_nearby(y,x):
+            l = [[ye, xe] for xe in range(x-1,x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
+            for ye, xe in l:
+                if xe >= self.x or ye >= self.y:
+                    continue
+                if self.final_table[ye][xe] == Minesweeper.BOMB and self.table_state[ye][xe] != Minesweeper.FLAG:
+                    self.show_answer_board([ye,xe])
+                    print "KABOOM!"
+                    return Minesweeper.IS_A_BOMB
+            self.open_neighbours(y,x)
+        self.print_table(self.table_state)
+        return Minesweeper.NOT_A_BOMB
+        
     def open_neighbours(self, y, x):
         """Open neighbours if the current coordinates are 0 and neighbours are untouched. 
         Recursively opens if the neighbours are also 0."""
-        
+        if [y, x] in self.mine_locations:
+            return [y, x]
         # generate neighbours with positive indexes
         l = [[ye, xe] for xe in range(x-1,x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]       
         for ye,xe in l:
@@ -176,7 +204,6 @@ class Minesweeper:
     
     def open_tile(self, y, x):
         """opens a tile at the respective coordinates on the table_state list."""
-        y = Minesweeper.letters.index(y)
         # Find the letter index and convert into a y-coordinate.
         # Checks if it is a mine
         if [y,x] in self.mine_locations:
@@ -215,10 +242,14 @@ while True:
     try:
         if command == "exit":
             break
+        elif 'd' == command[0]:
+            # open neighbour of selected coordinate if flag count matches number
+            if ms.special_open_neighbours(Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
+                break
         elif 'o' == command[0]:
             # open a tile
             # ms.open_tile checks whether it's a bomb
-            if ms.open_tile(command[1], int(command[2:])) == Minesweeper.IS_A_BOMB:
+            if ms.open_tile( Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
                 break
         elif 'f' == command[0]:
             ms.flag(command[1], int(command[2:]))
@@ -227,4 +258,5 @@ while True:
             print "You win!"
             break
     except:
+        print sys.exc_info()
         print "Whoops, try again!"
