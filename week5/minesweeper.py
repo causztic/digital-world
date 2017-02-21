@@ -199,7 +199,7 @@ print "exit: exit"
 
 default_height = 15
 default_width  = 15
-default_mines  = 15
+default_mines  = 20
 height = raw_input("Height (1 to 26), defaults to %d: " % default_height) or default_height
 width  = raw_input("Width (1 to 26), defaults to %d: " % default_width)  or default_width
 mines  = raw_input("Number of mines, defaults to %d: " % default_mines)   or default_mines
