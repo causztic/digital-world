@@ -142,8 +142,9 @@ class Minesweeper:
         if self.table_state[y][x] != "-" and self.table_state[y][x] == self.flags_nearby(y,x):
             l = [[ye, xe] for xe in range(x-1,x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
             for ye, xe in l:
-                if xe >= self.x or ye >= self.y:
+                if xe >= self.x or ye >= self.y: # do not open out of bounds
                     continue
+                # if it is a bomb but not flagged
                 if self.final_table[ye][xe] == Minesweeper.BOMB and self.table_state[ye][xe] != Minesweeper.FLAG:
                     self.show_answer_board([ye,xe])
                     print "KABOOM!"
