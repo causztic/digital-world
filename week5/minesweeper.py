@@ -184,7 +184,8 @@ class Minesweeper:
     
     def flag(self, y, x):
         """set a flag to the desired coordinates."""
-        self.table_state[Minesweeper.letters.index(y)][x] = Minesweeper.FLAG
+        if self.table_state[y][x] == '-':
+            self.table_state[y][x] = Minesweeper.FLAG
         Minesweeper.print_table(self.table_state)
 
     def tease_user(self,y, x):
@@ -252,7 +253,7 @@ while True:
             if ms.open_tile( Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
                 break
         elif 'f' == command[0]:
-            ms.flag(command[1], int(command[2:]))
+            ms.flag(Minesweeper.letters.index(command[1]), int(command[2:]))
         if ms.check_status() == Minesweeper.WIN:
             ms.show_answer_board([-1,-1])
             print "You win!"
