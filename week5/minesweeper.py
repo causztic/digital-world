@@ -39,7 +39,9 @@ class Minesweeper:
         NORMAL = '\33[10m'
         BLUE_START = '\33[104m'
         RED_START = '\33[31m'
+        PURPLE_START = '\33[35m'
         GREEN_START = '\33[92m'
+        ORANGE_START = '\33[93m'
         END = '\033[0m'
         
         width = len(table[0])
@@ -60,7 +62,18 @@ class Minesweeper:
             s += "%s %s %s \t" % (BLUE_START, Minesweeper.letters[y], END)
             for x in range(0, width):
                 value = table[y][x]
-                if value == "-":
+                if value == "0":
+                    s += "%s%s%s" % (NORMAL, value, END)
+                elif value == "1":
+                    s += "%s%s%s" % (GREEN_START, value, END)
+                elif value == "2":
+                    s += "%s%s%s" % (ORANGE_START, value, END)
+                elif value == "3":
+                    s += "%s%s%s" % (RED_START, value, END)  
+                elif value == "4" or value == "5" or value == "6" or value == "7" or value == "8":
+                    s += "%s%s%s" % (PURPLE_START, value, END)  
+                # special
+                elif value == "-":
                     s += "%s%s%s" % (NORMAL, value, END)
                 elif value == Minesweeper.BOMB:
                     if y == exploded_at[0] and x == exploded_at[1]:
@@ -70,9 +83,7 @@ class Minesweeper:
                         # show normal bomb
                         s += "%s%s%s" % (RED_START, value, END)
                 elif value == Minesweeper.FLAG:
-                    s += "%s%s%s" % (RED_START, value, END)
-                else:
-                    s += "%s%s%s" % (GREEN_START, value, END)
+                    s += "%s%s%s" % (RED_START, value, END)                    
                 s += " "*3
             s += "\n"
         
