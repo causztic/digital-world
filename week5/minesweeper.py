@@ -224,6 +224,7 @@ print "Options: "
 print "* = letter from A to P, # = number from 0 to 29"
 print "Opening a tile: o*#"
 print "Flag a tile:    f*#"
+print "Left and right click a tile to open neighbouring tiles when the number matches the number of flags:   d*#"
 print "exit: exit"
 
 default_height = 15
