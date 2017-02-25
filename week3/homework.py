@@ -12,11 +12,11 @@ sys.path.append('../week2/')
 from week2 import fahrenheit_to_celsius
 from week2_hw import celsius_to_fahrenheit
 
-
 def check_value(n1,n2,n3,x):
     return x > n1 and x > n2 and x < n3
 
 def temp_convert(unit, number):
+    """converts temperature from C to F and vice-versa."""
     if unit == 'C':
         return fahrenheit_to_celsius(number)
     elif unit == 'F':

@@ -15,20 +15,22 @@ class Minesweeper(object):
     WIN = True
     IS_A_BOMB = True
     NOT_A_BOMB = False
-
+    
     # Unicode just to look pretty
     FLAG = u'\u2691'
     BOMB = u'\U0001F4A3'
     EXPLOSION = u'\U0001F4A5'
 
-    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+               'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
     def __init__(self, height, width, mines):
         """initializes the Minesweeper instance with a width, height, and the number of mines.
         Sets up a default game table, generates random mine locations and updates another table for the solution."""
         self.x = int(width)
         self.y = int(height)
-        self.table_state = [['-' for i in xrange(0, self.x)] for j in xrange(0, self.y)]
+        self.table_state = [
+            ['-' for i in xrange(0, self.x)] for j in xrange(0, self.y)]
         self.mine_locations = self.generate_mines(int(mines))
         self.final_table = self.generate_answer()
 
@@ -50,12 +52,13 @@ class Minesweeper(object):
         for i in range(0, width):
             s += " %s" % i
             if i < 10:
-                s += " "*2
+                s += " " * 2
             else:
                 s += " "
 
         s += "%s\n" % END
-        # print letters for y-axis, + the relevant values in each coordinate depending on table.
+        # print letters for y-axis, + the relevant values in each coordinate
+        # depending on table.
         for y in range(0, height):
             s += "%s %s %s \t" % (BLUE_START, Minesweeper.letters[y], END)
             for x in range(0, width):
@@ -82,7 +85,7 @@ class Minesweeper(object):
                         s += "%s%s%s" % (RED_START, value, END)
                 elif value == Minesweeper.FLAG:
                     s += "%s%s%s" % (RED_START, value, END)
-                s += " "*3
+                s += " " * 3
             s += "\n"
 
         # use tabbing to space them nicely
@@ -91,7 +94,8 @@ class Minesweeper(object):
     def generate_mines(self, number):
         """generate a list of viable coordinates for mines, and randomly choose them."""
         mine_locations = []
-        available_places = [[j, i] for i in xrange(0, self.x) for j in xrange(0, self.y)]
+        available_places = [[j, i]
+                            for i in xrange(0, self.x) for j in xrange(0, self.y)]
         while number > 0:
             # the chosen coordinate for a mine is appended into the list and is
             # removed from the list of choices to prevent duplicates.
@@ -117,8 +121,8 @@ class Minesweeper(object):
         # (x-1, y-1), (x, y-1), (x+1, y-1),
         #  (x-1, y),  (x, y),   (x+1, y),
         # (x-1, y+1), (x, y+1), (x+1, y+1)
-        for xe in range(x-1, x+2):
-            for ye in range(y-1, y+2):
+        for xe in range(x - 1, x + 2):
+            for ye in range(y - 1, y + 2):
                 if [ye, xe] in self.mine_locations:
                     count += 1
         return str(count)
@@ -126,7 +130,8 @@ class Minesweeper(object):
     def flags_nearby(self, y, x):
         """ gets number of flags nearby """
         count = 0
-        l = [[ye, xe] for xe in range(x-1, x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
+        l = [[ye, xe] for xe in range(
+            x - 1, x + 2) if xe >= 0 for ye in range(y - 1, y + 2) if ye >= 0]
         for ye, xe in l:
             if xe >= self.x or ye >= self.y:
                 continue
@@ -137,9 +142,10 @@ class Minesweeper(object):
     def special_open_neighbours(self, y, x):
         """Open neighbours if the flag number matches the count."""
         if self.table_state[y][x] != "-" and self.table_state[y][x] == self.flags_nearby(y, x):
-            l = [[ye, xe] for xe in range(x-1, x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
+            l = [[ye, xe] for xe in range(
+                x - 1, x + 2) if xe >= 0 for ye in range(y - 1, y + 2) if ye >= 0]
             for ye, xe in l:
-                if xe >= self.x or ye >= self.y: # do not open out of bounds
+                if xe >= self.x or ye >= self.y:  # do not open out of bounds
                     continue
                 # if it is a bomb but not flagged
                 if self.final_table[ye][xe] == Minesweeper.BOMB and self.table_state[ye][xe] != Minesweeper.FLAG:
@@ -156,7 +162,8 @@ class Minesweeper(object):
         if [y, x] in self.mine_locations:
             return [y, x]
         # generate neighbours with positive indexes
-        l = [[ye, xe] for xe in range(x-1, x+2) if xe >= 0 for ye in range(y-1, y+2) if ye >= 0]
+        l = [[ye, xe] for xe in range(
+            x - 1, x + 2) if xe >= 0 for ye in range(y - 1, y + 2) if ye >= 0]
         for ye, xe in l:
             # if the indexes are out of the game table, skip
             if xe >= self.x or ye >= self.y:
@@ -227,9 +234,12 @@ print "exit: exit"
 default_height = 15
 default_width = 15
 default_mines = 20
-height = raw_input("Height (1 to 26), defaults to %d: " % default_height) or default_height
-width = raw_input("Width (1 to 26), defaults to %d: " % default_width)    or default_width
-mines = raw_input("Number of mines, defaults to %d: " % default_mines)    or default_mines
+height = raw_input("Height (1 to 26), defaults to %d: " %
+                   default_height) or default_height
+width = raw_input("Width (1 to 26), defaults to %d: " %
+                  default_width) or default_width
+mines = raw_input("Number of mines, defaults to %d: " %
+                  default_mines) or default_mines
 
 print ''
 
@@ -243,13 +253,14 @@ while True:
         if command == "exit":
             break
         elif 'd' == command[0]:
-            # open neighbour of selected coordinate if flag count matches number
+            # open neighbour of selected coordinate if flag count matches
+            # number
             if ms.special_open_neighbours(Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
                 break
         elif 'o' == command[0]:
             # open a tile
             # ms.open_tile checks whether it's a bomb
-            if ms.open_tile( Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
+            if ms.open_tile(Minesweeper.letters.index(command[1]), int(command[2:])) == Minesweeper.IS_A_BOMB:
                 break
         elif 'f' == command[0]:
             ms.flag(Minesweeper.letters.index(command[1]), int(command[2:]))

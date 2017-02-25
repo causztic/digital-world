@@ -6,8 +6,9 @@ Created on Mon Feb  6 11:03:37 2017
 @author: yaojie
 """
 
-import sys
 import random
+import sys
+
 from homework import is_prime
 
 height = int(sys.argv[1])
