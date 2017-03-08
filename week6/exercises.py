@@ -39,8 +39,9 @@ def find_anagram(f):
     """this will return the anagrams that has the highest combinations.
         required by tutor.
     """
-    max_length = len(max(anagrams, key=len))
-    return [a for a in anagrams if len(a) == max_length]
+    return anagrams
+    # max_length = len(max(anagrams, key=len))
+    # return [a for a in anagrams if len(a) == max_length]
 
 test = open("week6/replace.txt", 'r')
 # test = open("week6/noob_replace.txt", 'r')
@@ -97,5 +98,7 @@ def periodcheck(loc, c, text):
 
     return True
 
-for sentence in split_sentences(test):
-    print sentence + "\n"
+# for sentence in split_sentences(test):
+#     print sentence + "\n"
+
+print find_anagram(f)
