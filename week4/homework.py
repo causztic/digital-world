@@ -34,9 +34,7 @@ def max_list(inlist):
 
 
 def multiplication_table(n):
-    if n < 1:
-        return None
-    return [[i * j for i in range(1, n + 1)] for j in range(1, n + 1)]
+    return [[i * j for i in range(1, n + 1)] for j in range(1, n + 1)] or None
 
 
 def most_frequent(li):
