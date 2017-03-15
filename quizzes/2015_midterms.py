@@ -52,6 +52,7 @@ def getSchedule(f):
 
         elif current_day:
             li.append(tuple(map(lambda x: int(x), line.split(" "))))
+    schedule[current_day] = li
     return schedule
 
 schedule = getSchedule(open("quizzes/data1.txt", 'r'))
@@ -78,8 +79,11 @@ def findConflict(dictSchedule):
                 times.append(i)
         # if unique hours are the same as count,
         # this means that there is no overlap.
-        d[key] = (len(set(times)) == count)
+        d[key] = (len(set(times)) != count)
     return d
+
+print schedule
+print findConflict(schedule)
 
 
 def countLitPixel(cx, cy, r):
@@ -91,6 +95,6 @@ def countLitPixel(cx, cy, r):
 
     for i in x:
         for j in y:
-            if (abs(i-cx)-1) ** 2 + (abs(j-cy)-1) ** 2 < r ** 2:
+            if (abs(i - cx) - 1) ** 2 + (abs(j - cy) - 1) ** 2 < r ** 2:
                 count += 1
     return count

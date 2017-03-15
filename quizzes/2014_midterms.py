@@ -1,4 +1,5 @@
 ''' Part A'''
+import itertools
 
 
 def stc(s1, s2):
@@ -108,3 +109,17 @@ class Matrix(object):
 
     def triDiag(self):
         return self.lowerDiag() and self.upperDiag() and self.diag()
+
+a = [[1, 2, 3], [2, 3, 4, 5]]
+c = list(itertools.chain(*a))
+
+l = [[[1, 2], ["Hello", 5, "again"]], [[1, 2], ["Hello", 4, "again"]]]
+
+def compare(l):
+    for idx, items in enumerate(l[0]):
+        for item in items:
+            if item not in l[1][idx]:
+                return False
+    return True
+
+print compare(l)
