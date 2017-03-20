@@ -5,7 +5,7 @@ f = open('week6/unixdict.txt', 'r')
 
 def find_anagram(f):
     lines = f.readlines()
-    max_length = len(lines[-1])
+    max_length = 10
     # this splits the lines based on length of each word.
     sorted_lines = [[i.strip() for i in lines if len(i) == length]
                     for length in range(1, max_length + 1)]
