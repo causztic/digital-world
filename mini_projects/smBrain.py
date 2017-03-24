@@ -9,8 +9,7 @@ class MySMClass(sm.SM):
     startState = "initial"
 
     def __init__(self):
-        self.original_theta = -1
-        self.turns = 0
+        self.resetTheta()
 
     def setTheta(self, theta):
         if self.original_theta == -1:
@@ -22,33 +21,33 @@ class MySMClass(sm.SM):
     def getNextValues(self, state, inp):
         fvel = 0
         rvel = 0
-
+        print inp.sonars
         t = inp.odometry.theta
         p = math.pi / 2
-        fvel = 0.2
+        fvel = 0
         rvel = 0
         state_rotation = state == "rotate_left" or state == "rotate_right"
-        bot_too_far = inp.sonars[2] > 0.7
+        bot_too_far = inp.sonars[2] > 0.3
         #bot_too_near = inp.sonars[1] < 0.3 or inp.sonars[2] < 0.3 or inp.sonars[3] < 0.3
-        bot_too_near = inp.sonars[2] < 0.6
-        no_right_side = inp.sonars[4] > 0.6
+        bot_too_near = inp.sonars[2] < 0.2
+        no_right_side = inp.sonars[4] > 0.5
 
         if state == "initial":
             if bot_too_far:
-                fvel = 0.2
+                fvel = 0.1
                 nextState = "initial"
             elif bot_too_near:
-                fvel = -0.2
+                fvel = -0.1
                 nextState = "initial"
             else:
                 nextState = "rotate_left"
 
         if state == "navigate":
             if bot_too_far:
-                fvel = 0.2
+                fvel = 0.1
                 nextState = "navigate"
             elif bot_too_near:
-                fvel = -0.2
+                fvel = -0.1
                 nextState = "navigate"
             else:
                 nextState = "rotate_left"
@@ -60,44 +59,46 @@ class MySMClass(sm.SM):
             self.setTheta(t)
 
         if state == "rotate_left":
-            fvel = 0.3
-            rvel = 0.5
+            fvel = 0.015
             if self.original_theta > 6.2 and t < 0.02:
                 self.original_theta = 0
             if abs(t - self.original_theta) < p:
-                rvel = math.pi / 6
+                rvel = 0.2
                 nextState = "rotate_left"
             else:
-                nextState = "compensate_right"
+                self.resetTheta()
+                nextState = "navigate"
+                #nextState = "compensate_right"
 
         if state == "rotate_right":
-            fvel = 0.3
-            rvel = -0.5
+            fvel = 0.015
             if self.original_theta < 0.02 and t > 6.2:
                 self.original_theta = 2 * math.pi
             if abs(t - self.original_theta) < p:
-                rvel = -math.pi / 6
+                rvel = -0.2
                 nextState = "rotate_right"
             else:
-                nextState = "compensate_left"
-
-        if state == "compensate_right":
-            fvel = 0
-            if abs(self.original_theta - t) > p:
-                rvel = -0.1
-                nextState = "compensate_right"
-            else:
                 self.resetTheta()
                 nextState = "navigate"
+                #nextState = "compensate_left"
 
-        if state == "compensate_left":
-            fvel = 0
-            if abs(self.original_theta - t) > p:
-                rvel = 0.1
-                nextState = "compensate_left"
-            else:
-                self.resetTheta()
-                nextState = "navigate"
+        # if state == "compensate_right":
+        #     fvel = 0
+        #     if abs(self.original_theta - t) > p:
+        #         rvel = -0.1
+        #         nextState = "compensate_right"
+        #     else:
+        #         self.resetTheta()
+        #         nextState = "navigate"
+
+        # if state == "compensate_left":
+        #     fvel = 0
+        #     if abs(self.original_theta - t) > p:
+        #         rvel = 0.1
+        #         nextState = "compensate_left"
+        #     else:
+        #         self.resetTheta()
+        #         nextState = "navigate"
 
         if state != nextState:
             print nextState
@@ -123,7 +124,7 @@ def plotSonar(sonarNum):
 
 def setup():
     robot.gfx = gfx.RobotGraphics(drawSlimeTrail=True,  # slime trails
-                                  sonarMonitor=True)  # sonar monitor widget
+                                  sonarMonitor=False)  # sonar monitor widget
 
     # set robot's behavior
     robot.behavior = mySM
