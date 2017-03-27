@@ -21,23 +21,34 @@ class MySMClass(sm.SM):
     def getNextValues(self, state, inp):
         fvel = 0
         rvel = 0
-        print inp.sonars
-        t = inp.odometry.theta
-        p = math.pi / 2
-        fvel = 0
-        rvel = 0
-        state_rotation = state == "rotate_left" or state == "rotate_right"
-        bot_too_far = inp.sonars[2] > 0.3
-        #bot_too_near = inp.sonars[1] < 0.3 or inp.sonars[2] < 0.3 or inp.sonars[3] < 0.3
-        bot_too_near = inp.sonars[2] < 0.2
-        no_right_side = inp.sonars[4] > 0.5
+        front_dist = 0.5
+        lower_bound = front_dist - 0.1
+        upper_bound = front_dist + 0.1
+
+        # Sensors
+        front_left = inp.sonars[1]
+        front = inp.sonars[2]
+        front_right = inp.sonars[3]
+        right = inp.sonars[4]
+
+        bot_too_far =  front > front_dist
+        bot_too_near = front < front_dist - 0.1
+        no_right_side = right > front_dist
+
+        fr_lower_bound = lower_bound / math.cos(math.pi / 4)
+        fr_upper_bound = upper_bound / math.cos(math.pi / 4)
+
+        fr_within_bounds = front_right > fr_lower_bound and front_right < fr_upper_bound
+        r_within_bounds = right > lower_bound and right < upper_bound
+
+        within_bounds = fr_within_bounds and r_within_bounds
 
         if state == "initial":
             if bot_too_far:
-                fvel = 0.1
+                fvel = 0.2
                 nextState = "initial"
             elif bot_too_near:
-                fvel = -0.1
+                fvel = -0.2
                 nextState = "initial"
             else:
                 nextState = "rotate_left"
@@ -54,50 +65,21 @@ class MySMClass(sm.SM):
             if no_right_side:
                 nextState = "rotate_right"
 
-        if state_rotation:
-            fvel = 0
-            self.setTheta(t)
-
         if state == "rotate_left":
-            fvel = 0.015
-            if self.original_theta > 6.2 and t < 0.02:
-                self.original_theta = 0
-            if abs(t - self.original_theta) < p:
+            if not within_bounds:
+                fvel = 0
                 rvel = 0.2
                 nextState = "rotate_left"
             else:
-                self.resetTheta()
+                fvel = 0.2
+                rvel = 0
                 nextState = "navigate"
                 #nextState = "compensate_right"
 
-        if state == "rotate_right":
-            fvel = 0.015
-            if self.original_theta < 0.02 and t > 6.2:
-                self.original_theta = 2 * math.pi
-            if abs(t - self.original_theta) < p:
-                rvel = -0.2
-                nextState = "rotate_right"
-            else:
-                self.resetTheta()
-                nextState = "navigate"
-                #nextState = "compensate_left"
-
-        # if state == "compensate_right":
+        # if state == "rotate_right":
         #     fvel = 0
-        #     if abs(self.original_theta - t) > p:
-        #         rvel = -0.1
-        #         nextState = "compensate_right"
+        #     nextState ="rotate_right"
         #     else:
-        #         self.resetTheta()
-        #         nextState = "navigate"
-
-        # if state == "compensate_left":
-        #     fvel = 0
-        #     if abs(self.original_theta - t) > p:
-        #         rvel = 0.1
-        #         nextState = "compensate_left"
-        #     else:
-        #         self.resetTheta()
         #         nextState = "navigate"
 
         if state != nextState:
