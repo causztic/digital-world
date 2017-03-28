@@ -24,8 +24,7 @@ class MySMClass(sm.SM):
         print inp.sonars
         t = inp.odometry.theta
         p = math.pi / 2
-        fvel = 0
-        rvel = 0
+
         state_rotation = state == "rotate_left" or state == "rotate_right"
         bot_too_far = inp.sonars[2] > 0.3
         #bot_too_near = inp.sonars[1] < 0.3 or inp.sonars[2] < 0.3 or inp.sonars[3] < 0.3
