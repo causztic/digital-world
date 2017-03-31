@@ -5,20 +5,28 @@ import libdw.gfx as gfx
 import libdw.util as util
 
 dDesired = 0.7
+k = 0.25
 
 # Input is output of Sensor machine (below); output is an action.
 # Note that this machine must also compute E, the error, and output
 # the velocity, based on that.
+
+
 class Controller(sm.SM):
+
     def getNextValues(self, state, inp):
-        error = abs(dDesired - inp)
-        fvel = 0.2 * error
+        error = inp - dDesired
+        fvel = k * error
         return state, io.Action(fvel=fvel, rvel=0)
 
-# Input is SensorInput instance; output is a delayed front sonar reading 
+# Input is SensorInput instance; output is a delayed front sonar reading
+
+
 class Sensor(sm.SM):
+
     def __init__(self, initDist, numDelays):
-        self.startState = [initDist]*numDelays
+        self.startState = [initDist] * numDelays
+
     def getNextValues(self, state, inp):
         print inp.sonars[2]
         output = state[-1]
@@ -30,28 +38,34 @@ mySM.name = 'brainSM'
 
 ######################################################################
 ###
-###          Brain methods
+# Brain methods
 ###
 ######################################################################
 
+
 def plotSonar(sonarNum):
-    robot.gfx.addStaticPlotFunction(y=('sonar'+str(sonarNum),
-                                 lambda: io.SensorInput().sonars[sonarNum]))
+    robot.gfx.addStaticPlotFunction(y=('sonar' + str(sonarNum),
+                                       lambda: io.SensorInput().sonars[sonarNum]))
+
 
 def setup():
     robot.gfx = gfx.RobotGraphics(drawSlimeTrail=False)
     plotSonar(2)
     robot.behavior = mySM
-    robot.behavior.start(traceTasks = robot.gfx.tasks())
+    robot.behavior.start(traceTasks=robot.gfx.tasks())
+
 
 def brainStart():
     pass
 
+
 def step():
     robot.behavior.step(io.SensorInput()).execute()
 
+
 def brainStop():
     pass
+
 
 def shutdown():
     pass
