@@ -15,6 +15,7 @@ reload(gfx)
 
 desiredRight = 0.5
 forwardVelocity = 0.1
+k = -5
 
 # No additional delay
 class Sensor(sm.SM):
@@ -26,7 +27,9 @@ class Sensor(sm.SM):
 # inp is the distance to the right
 class WallFollower(sm.SM):
     def getNextValues(self, state, inp):
-
+        error = desiredRight - inp
+        rvel = k * error
+        return state, io.Action(fvel=forwardVelocity, rvel=rvel)
 #################
 # Your code here
 ################
