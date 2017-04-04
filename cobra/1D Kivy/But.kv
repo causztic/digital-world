@@ -1,7 +1,9 @@
 #:kivy 1.9.1
 
 <Items>:
-    Milk:
+    GroceryItem:
+        name: "Milk"
+        count: 0
         Image:
             size: 300,300
             source: 'milk.png'
@@ -34,7 +36,9 @@
                 text: self.parent.parent.label_text
                 font_size: 80
 
-    Coke:
+    GroceryItem:
+        name: "Coke"
+        count: 0
         Image:
             size: 300,300
             source: 'soft_drinks.png'
