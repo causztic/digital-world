@@ -1,0 +1,68 @@
+#:kivy 1.9.1
+
+<Items>:
+    Milk:
+        Image:
+            size: 300,300
+            source: 'milk.png'
+            pos: root.center_x-150, root.center_y-150
+
+            Button:
+                size: 50,50
+                pos: self.parent.center_x+100, self.parent.center_y-100
+                on_press: self.parent.parent.increment()
+                        
+                Image:
+                    size: 50,50
+                    source: 'Plus_Sign.png'
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    allow_stretch: True
+            Button:
+                size: 50,50
+                pos: self.parent.center_x+100, self.parent.center_y-200
+                on_press: self.parent.parent.decrement()
+
+                Image:
+                    size: 50,50
+                    source: 'minus_sign.png'
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    allow_stretch: True
+            Label:
+                pos: self.parent.center_x + 75, self.parent.center_y - 300
+                text: self.parent.parent.label_text
+                font_size: 80
+
+    Coke:
+        Image:
+            size: 300,300
+            source: 'soft_drinks.png'
+            pos: root.center_x+300, root.center_y-150
+
+            Button:
+                size: 50,50
+                pos: self.parent.center_x+100, self.parent.center_y-100
+                on_press: self.parent.parent.increment()
+                        
+                Image:
+                    size: 50,50
+                    source: 'Plus_Sign.png'
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    allow_stretch: True
+            Button:
+                size: 50,50
+                pos: self.parent.center_x+100, self.parent.center_y-200
+                on_press: self.parent.parent.decrement()
+
+                Image:
+                    size: 50,50
+                    source: 'minus_sign.png'
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    allow_stretch: True
+            Label:
+                pos: self.parent.center_x + 75, self.parent.center_y - 300
+                text: self.parent.parent.label_text
+                font_size: 80
