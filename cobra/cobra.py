@@ -9,7 +9,7 @@ class CobraApp(App):
 
     def build(self):
         layout = GridLayout(cols=3)
-        # layout.add_widget(Label(text="Your fridge is currently empty!"))
+        layout.add_widget(GroceryItem(name="milk"))
         return layout
 
 if __name__ == '__main__':
