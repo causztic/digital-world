@@ -7,7 +7,7 @@ import pytesseract
 
 # Create the in-memory stream
 stream = BytesIO()
-camera = PiCamera()
+camera = PiCamera(rotation=270)
 camera.start_preview()
 sleep(2)
 camera.capture(stream, format='jpeg')
