@@ -14,8 +14,8 @@ class GroceryItem(Widget):
             if k in acceptable_keys_list:
                 self.__setattr__(k, kwargs[k])
         image = Image(size=(300,300), source=self.name+".png")
-        add_button = Button(size=(50,50), pos=(image.center_x+100, image.center_y-100), text="+", on_press=(self.increment()))
-        remove_button = Button(size=(50,50), pos=(image.center_x+100, image.center_y-100), text="+", on_press=(self.decrement()))
+        add_button = Button(size=(50,50), pos=(image.center_x+100, image.center_y-100), text="+")
+        remove_button = Button(size=(50,50), pos=(image.center_x+100, image.center_y-100), text="-")
         image.add_widget(add_button)
         image.add_widget(remove_button)
         self.add_widget(image)
