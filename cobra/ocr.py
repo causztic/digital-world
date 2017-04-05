@@ -13,4 +13,6 @@ sleep(2)
 camera.capture(stream, format='jpeg')
 # "Rewind" the stream to the beginning so we can read its content
 stream.seek(0)
-print(pytesseract.image_to_string(Image.open(stream)))
+camera.stop_preview()
+image = Image.open(stream)
+print(pytesseract.image_to_string(image))
