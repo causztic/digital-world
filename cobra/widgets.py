@@ -1,8 +1,5 @@
-from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import StringProperty
-from kivy.uix.button import Button
-from kivy.uix.label import Label
 
 class GroceryItem(Widget):
     label_text = StringProperty()
@@ -25,17 +22,3 @@ class GroceryItem(Widget):
     def decrement(self):
         self.count -= 1
         self.label_text = str(self.count)
-    
-class ButApp(App):
-    
-    def build(self):
-        # import gridview here
-        list_of_groceries = [{"name": "milk", "count": 5}, { "name": "coke", "count": "3"}]
-        for grocery in list_of_groceries:
-            GroceryItem(grocery)
-            # for every item, add to gridview
-        
-        #return the gridview with the groceryitems
-        return None
-
-ButApp().run()
