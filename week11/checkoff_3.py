@@ -4,7 +4,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 
-
 class MyLabel(Label):
 
     def __init__(self, **kwargs):
