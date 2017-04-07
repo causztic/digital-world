@@ -17,7 +17,7 @@ GPIO.setup(ledcolor.values(), GPIO.OUT)
 
 while True:
     redlight = firebase.get('/redlight')
-    yellowlight = firebase.get('/yellowlight')
+    yellowlight = firebase.get('/yellight')
     
     if redlight == "on":
         GPIO.output(ledcolor["red"], GPIO.HIGH)
