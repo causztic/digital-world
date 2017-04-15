@@ -5,11 +5,11 @@ from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
-
+from kivy.uix.scrollview import ScrollView
 #from ocr import OCR
 from widgets import GroceryItem
 
-list_items = ['milk','apple','chocolate','sof drinks','shrimp','steak','meat','broccoli']
+list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','meat','broccoli']
 
 class InventoryScreen(Screen):
     def __init__(self, **kwargs):
@@ -21,10 +21,13 @@ class InventoryScreen(Screen):
         topbox.add_widget(label)
         topbox.add_widget(camera)
         overall_layout.add_widget(topbox)
-        bottom_layout = GridLayout(cols=3)
+        bottom_layout = GridLayout(cols=3,spacing = 200,size_hint=(1,None))
+        bottom_layout.bind(minimum_height = bottom_layout.setter('height'))
         for items in list_items:
             bottom_layout.add_widget(GroceryItem(name=items))
-        overall_layout.add_widget(bottom_layout)
+        root = ScrollView()
+        root.add_widget(bottom_layout)
+        overall_layout.add_widget(root)
         self.add_widget(overall_layout)
         
 

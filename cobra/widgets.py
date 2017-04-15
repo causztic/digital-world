@@ -3,10 +3,10 @@ from kivy.uix.image  import Image
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.relativelayout import RelativeLayout
 
 
-class GroceryItem(Widget):
+class GroceryItem(RelativeLayout):
 
     def __init__(self,**kwargs):
         super(GroceryItem, self).__init__(**kwargs)
