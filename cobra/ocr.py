@@ -1,23 +1,23 @@
 from io import BytesIO
 from time import sleep
-from picamera import PiCamera
 from PIL import Image
+from kivy.uix.camera import Camera
+
+import time
 import pytesseract
 
 
 class OCR(object):
 
     def __init__(self, rotation):
-        self.camera = PiCamera()
-        self.camera.rotation = rotation
         self.stream = BytesIO()
+        self.play = False
+        self.camera = Camera(resolution=(640, 480), play=self.play)
 
-    def take_photo(self):
-        self.camera.start_preview()
-        sleep(2)
-        self.camera.capture(stream, format='jpeg')
-        # "Rewind" the stream to the beginning so we can read its content
-        stream.seek(0)
-        self.camera.stop_preview()
-        image = Image.open(stream)
-        return pytesseract.image_to_string(image)
+    def toggle_camera(self):
+        self.play = not self.play
+
+    def analyze_photo(self):
+        f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
+        self.camera.export_to_png(f)
+        return pytesseract.image_to_string(Image.open(f))
