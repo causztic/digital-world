@@ -14,22 +14,27 @@ list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','meat','
 Window.size = (800,480)
 class InventoryScreen(Screen):
     def __init__(self, **kwargs):
-        Screen.__init__(self, **kwargs)
-        overall_layout = GridLayout(rows=2)
-        topbox = BoxLayout(orientation='horizontal',size_hint = (None,None))
-        label = Label(text='Inventory',color = (0,0,0,1),font_size=60,size_hint=(None,None))
-        camera = Image(source = 'camera.png',size_hint=(None,None),height = 100,width = 100)
+        super(InventoryScreen,self).__init__(**kwargs)
+        overall_layout = BoxLayout(orientation='vertical',size = (800,480),size_hint = (1,None))
+        topbox = BoxLayout(orientation='horizontal',height = 100,size_hint = (1,None))
+        label = Label(text='Inventory',color = (0,0,0,1),font_size=60)
+        camera = Image(source = 'camera.png')
         topbox.add_widget(label)
         topbox.add_widget(camera)
         overall_layout.add_widget(topbox)
-        inventory = GridLayout(cols=3,spacing = (125,175),size_hint=(None,None),padding = 30)
-        inventory.bind(minimum_height = inventory.setter('height'))
+        bottom_layout = BoxLayout(orientation = 'horizontal')
+        inventory = GridLayout(cols=3,spacing = (125,50),size_hint=(None,None),padding = 30,size=(800,380))
+        
+        #inventory.bind(minimum_height = inventory.setter('height'))
         for items in list_items:
             inventory.add_widget(GroceryItem(name=items))
-        bottom_layout = ScrollView(size_hint=(1, 0),size=(Window.width, Window.height))
-        bottom_layout.add_widget(inventory)
+        inventory.height = inventory.minimum_height+750
+        scroller = ScrollView(size=(800,370))
+        scroller.add_widget(inventory)
+        bottom_layout.add_widget(scroller)
         overall_layout.add_widget(bottom_layout)
         self.add_widget(overall_layout)
+        # self.add_widget(inventory)
         
 
 class CobraApp(App):
