@@ -26,7 +26,7 @@ class GroceryItem(RelativeLayout):
         remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
         minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'minus.png')
         remove_button.add_widget(minus_sign)
-        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-50, image.center_y-75))
+        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-50, image.center_y-87.5))
         self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-9, counter_backgrnd.center_y-6.25),text='0',font_size = 30, color=(1,1,1,1))
         counter_backgrnd.add_widget(self.counter)
         image.add_widget(add_button)
