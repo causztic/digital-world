@@ -26,4 +26,3 @@ ssh cobra@10.21.146.155
 cd ~/digital-world
 git pull
 ```
-

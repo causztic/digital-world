@@ -12,4 +12,4 @@ class RunOfFive(sm.SM):
         return nextState, nextState
 
 m = RunOfFive()
-print m.transduce([2,5,0,2,5,5,0,5,7,5,5,5,5])
+print m.transduce([2, 5, 0, 2, 5, 5, 0, 5, 7, 5, 5, 5, 5])
