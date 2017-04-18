@@ -26,7 +26,7 @@ class InventoryScreen(Screen):
         # camera = Image(source='camera.png')
         topbox.add_widget(label)
         #topbox.add_widget(camera)
-        topbox.add_widget(CamItem)
+        topbox.add_widget(CamItem())
         overall_layout.add_widget(topbox)
         bottom_layout = BoxLayout(orientation='horizontal')
         inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
