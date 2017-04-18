@@ -1,3 +1,4 @@
+from firebase import firebase
 from kivy.app import App
 from kivy.uix.image  import Image
 from kivy.uix.gridlayout import GridLayout
@@ -7,11 +8,17 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
+from kivy.clock import Clock
 #from ocr import OCR
 from widgets import GroceryItem
 
+url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
+token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
+firebase = firebase.FirebaseApplication(url, token)
+
 list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','meat','broccoli']
 Window.size = (800,480)
+
 class InventoryScreen(Screen):
     def __init__(self, **kwargs):
         super(InventoryScreen,self).__init__(**kwargs)
@@ -24,18 +31,16 @@ class InventoryScreen(Screen):
         overall_layout.add_widget(topbox)
         bottom_layout = BoxLayout(orientation = 'horizontal')
         inventory = GridLayout(cols=3,spacing = (125,50),size_hint=(None,None),padding = 30,size=(800,380))
-        
-        #inventory.bind(minimum_height = inventory.setter('height'))
         for items in list_items:
-            inventory.add_widget(GroceryItem(name=items))
+            inventory.add_widget(GroceryItem(name=items,count = 1))
+            firebase.put('/',items,GroceryItem(name=items).counter.text)
         inventory.height = inventory.minimum_height+750
         scroller = ScrollView(size=(800,370))
         scroller.add_widget(inventory)
         bottom_layout.add_widget(scroller)
         overall_layout.add_widget(bottom_layout)
         self.add_widget(overall_layout)
-        # self.add_widget(inventory)
-        
+
 
 class CobraApp(App):
 
