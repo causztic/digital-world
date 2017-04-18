@@ -58,7 +58,7 @@ class CamItem(BoxLayout):
     def __init__(self, **kwargs):
         super(CamItem, self).__init__(**kwargs)
         self.stream = BytesIO()
-        self.camera = Camera(play=False)
+        self.camera = Camera(resolution=(800,600), play=False)
 
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo())
         self.activate_button = ToggleButton(text="Toggle Camera", on_press=self.toggle_camera())
@@ -67,14 +67,14 @@ class CamItem(BoxLayout):
         self.add_widget(self.activate_button)
         self.add_widget(self.take_photo_button)
 
-    def toggle_camera(self):
+    def toggle_camera(self, instance):
         self.camera.play = not self.camera.play
         if self.camera.play:
             self.add_widget(self.take_photo_button)
         else:
             self.remove_widget(self.take_photo_button)
 
-    def analyze_photo(self):
+    def analyze_photo(self, instance):
         f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
         self.camera.export_to_png(f)
         return pytesseract.image_to_string(img.open(f))
