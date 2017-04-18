@@ -7,6 +7,13 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.camera import Camera
+
+from io import BytesIO
+from PIL import Image as img
+
+import time
+import pytesseract
 
 class GroceryItem(RelativeLayout):
 
@@ -44,3 +51,26 @@ class GroceryItem(RelativeLayout):
     def decrement(self,instance):
         self.count -= 1
         self.counter.text = str(self.count)
+
+class CamItem(BoxLayout):
+
+    def __init__(self, **kwargs):
+        super(CamItem, self).__init__(**kwargs)
+        self.stream = BytesIO()
+        self.camera = Camera(resolution=(640, 480), play=False)
+        self.activate_button = Button(text="Toggle Camera", on_press=self.toggle_camera())
+        self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo())
+        self.add_widget(self.camera)
+        self.add_widget(self.activate_button)
+
+    def toggle_camera(self):
+        self.camera.play = not self.camera.play
+        if self.camera.play:
+            self.add_widget(self.take_photo_button)
+        else:
+            self.remove_widget(self.take_photo_button)
+
+    def analyze_photo(self):
+        f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
+        self.camera.export_to_png(f)
+        return pytesseract.image_to_string(img.open(f))

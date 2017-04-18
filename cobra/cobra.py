@@ -7,8 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
-from widgets import GroceryItem
-from ocr import OCR
+from widgets import GroceryItem, CamItem
 
 list_items = ['milk', 'apple', 'chocolate','soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
 
@@ -27,7 +26,7 @@ class InventoryScreen(Screen):
         # camera = Image(source='camera.png')
         topbox.add_widget(label)
         #topbox.add_widget(camera)
-        topbox.add_widget(OCR)
+        topbox.add_widget(CamItem)
         overall_layout.add_widget(topbox)
         bottom_layout = BoxLayout(orientation='horizontal')
         inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
