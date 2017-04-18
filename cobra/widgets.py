@@ -4,7 +4,9 @@ from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 
 class GroceryItem(RelativeLayout):
 
@@ -15,21 +17,23 @@ class GroceryItem(RelativeLayout):
         for k in kwargs.keys():
             if k in acceptable_keys_list:
                 self.__setattr__(k, kwargs[k])
-        image = Image(size=(200,200), source=self.name+".png")
-        add_button = Button(size=(25,25), pos=(image.center_x+100, image.center_y), text="+")
+        # self.source = self.name+".png"
+        # self.size = (150,150)
+        image = Image(size=(150,150), source=self.name+".png")
+        add_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y), text="+")
         plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'plus.png')
         add_button.add_widget(plus_sign)
-        remove_button = Button(size=(25,25), pos=(image.center_x+100, image.center_y-75), text="-")
+        remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
         minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'minus.png')
         remove_button.add_widget(minus_sign)
-        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-100, image.center_y-75))
+        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-50, image.center_y-87.5))
         self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-9, counter_backgrnd.center_y-6.25),text='0',font_size = 30, color=(1,1,1,1))
         counter_backgrnd.add_widget(self.counter)
         image.add_widget(add_button)
         image.add_widget(remove_button)
         image.add_widget(counter_backgrnd)
-        self.add_widget(image)
         image.size_hint = (None,None)
+        self.add_widget(image)
         add_button.bind(on_press = self.increment)
         remove_button.bind(on_press = self.decrement)
 
