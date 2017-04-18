@@ -57,11 +57,12 @@ class CamItem(BoxLayout):
     def __init__(self, **kwargs):
         super(CamItem, self).__init__(**kwargs)
         self.stream = BytesIO()
-        self.camera = Camera(resolution=(640, 480), play=False)
-        self.activate_button = Button(text="Toggle Camera", on_press=self.toggle_camera())
+        self.camera = Camera(play=False)
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo())
+        self.activate_button = Button(text="Toggle Camera", on_press=self.toggle_camera())
         self.add_widget(self.camera)
         self.add_widget(self.activate_button)
+        self.add_widget(self.take_photo_button)
 
     def toggle_camera(self):
         self.camera.play = not self.camera.play
