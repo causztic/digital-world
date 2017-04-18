@@ -60,8 +60,8 @@ class CamItem(BoxLayout):
         self.stream = BytesIO()
         self.camera = Camera(resolution=(800,600), play=False)
 
-        self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo())
-        self.activate_button = ToggleButton(text="Toggle Camera", on_press=self.toggle_camera())
+        self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
+        self.activate_button = ToggleButton(text="Toggle Camera", on_press=self.toggle_camera)
         
         self.add_widget(self.camera)
         self.add_widget(self.activate_button)
