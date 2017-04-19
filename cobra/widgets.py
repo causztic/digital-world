@@ -63,26 +63,6 @@ class GroceryItem(RelativeLayout):
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
-class KivyCV2Camera(Image):
-    def __init__(self, capture, fps, **kwargs):
-        super(KivyCV2Camera, self).__init__(**kwargs)
-        self.capture = capture
-        Clock.schedule_interval(self.update, 1.0 / fps)
-
-    def update(self, dt):
-        ret, frame = self.capture.read()
-        if self.texture is None:
-            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-        if ret:
-            try:
-                self.buffer = frame.imageData
-            except AttributeError:
-                self.buffer = frame.tostring()
-
-            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-            self.canvas.ask_update()
-            self.buffer = None
-
 class KivyCamera(Image):
     def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
@@ -102,3 +82,24 @@ class KivyCamera(Image):
         self.rawCapture.truncate(0)
         self.texture.blit_buffer(gray.tostring(), colorfmt='bgr')
         self.canvas.ask_update()
+
+
+# class KivyCV2Camera(Image):
+#     def __init__(self, capture, fps, **kwargs):
+#         super(KivyCV2Camera, self).__init__(**kwargs)
+#         self.capture = capture
+#         Clock.schedule_interval(self.update, 1.0 / fps)
+
+#     def update(self, dt):
+#         ret, frame = self.capture.read()
+#         if self.texture is None:
+#             self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+#         if ret:
+#             try:
+#                 self.buffer = frame.imageData
+#             except AttributeError:
+#                 self.buffer = frame.tostring()
+
+#             self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+#             self.canvas.ask_update()
+#             self.buffer = None

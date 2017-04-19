@@ -9,7 +9,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
-from widgets import GroceryItem, KivyCamera, KivyCV2Camera
+from widgets import GroceryItem, KivyCamera
+# from widgets import KivyCV2Camera
 from PIL import Image as img
 
 import cv2
@@ -82,11 +83,11 @@ class CameraScreen(Screen):
 
         bottom = BoxLayout(orientation="horizontal")
 
-        # self.camera = KivyCamera()
-        self.capture = cv2.VideoCapture(0)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
-        self.camera = KivyCV2Camera(capture=self.capture, fps=30)
+        self.camera = KivyCamera()
+        # self.capture = cv2.VideoCapture(0)
+        # self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
+        # self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
+        # self.camera = KivyCV2Camera(capture=self.capture, fps=30)
 
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
 
@@ -122,7 +123,8 @@ class CobraApp(App):
 
     def on_stop(self):
         #without this, app will not exit even if the window is closed
-        self.c_s.capture.release()
+        # self.c_s.capture.release()
+        pass
 
 if __name__ == '__main__':
     CobraApp().run()
