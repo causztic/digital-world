@@ -66,8 +66,8 @@ class GroceryItem(RelativeLayout):
 class KivyCamera(Image):
     def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
-        self.camera = PiCamera(resolution = (800, 608), framerate = 30)
-        self.rawCapture = PiRGBArray(self.camera, size=(800, 608))
+        self.camera = PiCamera(resolution =(320, 240), framerate = 30)
+        self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
         self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
         time.sleep(0.1)
         Clock.schedule_interval(self.update, 1.0 / 30)
@@ -77,6 +77,7 @@ class KivyCamera(Image):
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = self.rawCapture.array
+        print image
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
         self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
