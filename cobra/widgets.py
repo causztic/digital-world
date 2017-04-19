@@ -76,13 +76,7 @@ class KivyCamera(Image):
                 # self.texture.flip_horizontal()
             if ret:
                 # convert it to texture
-                try:
-                    self.buffer = frame.imageData
-                except AttributeError:
-                    # On OSX there is no imageData attribute but a tostring()
-                    # method.
-                    self.buffer = frame.tostring()
-
+                self.buffer = frame.imageData
                 self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-                #self.canvas.ask_update()
+                self.canvas.ask_update()
                 self.buffer = None
