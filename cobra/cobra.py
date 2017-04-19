@@ -63,7 +63,7 @@ class CameraScreen(Screen):
         topbox.add_widget(inventory)
         overall_layout.add_widget(topbox)
 
-        self.capture = cv2.VideoCapture(1)
+        self.capture = cv2.VideoCapture(0)
         self.my_camera = KivyCamera(capture=self.capture, fps=30)
 
         overall_layout.add_widget(self.my_camera)
