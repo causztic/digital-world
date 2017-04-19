@@ -82,6 +82,6 @@ class KivyCamera(Image):
         self.rawCapture.truncate(0)
         if self.texture is None:
             # Create the texture
-            self.texture = Texture.create(self.camera.resolution[1], self.camera.resolution[0])
+            self.texture = Texture.create((self.camera.resolution[1], self.camera.resolution[0]))
             self.texture.blit_buffer(image, colorfmt='bgr')
             self.canvas.ask_update()
