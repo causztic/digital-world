@@ -70,19 +70,18 @@ class KivyCV2Camera(Image):
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
-        if self.play:
-            ret, frame = self.capture.read()
-            if self.texture is None:
-                self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-            if ret:
-                try:
-                    self.buffer = frame.imageData
-                except AttributeError:
-                    self.buffer = frame.tostring()
+        ret, frame = self.capture.read()
+        if self.texture is None:
+            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+        if ret:
+            try:
+                self.buffer = frame.imageData
+            except AttributeError:
+                self.buffer = frame.tostring()
 
-                self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-                self.canvas.ask_update()
-                self.buffer = None
+            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+            self.canvas.ask_update()
+            self.buffer = None
 
 class KivyCamera(Image):
     def __init__(self, **kwargs):
