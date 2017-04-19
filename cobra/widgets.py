@@ -69,12 +69,12 @@ class KivyCamera(Image):
         self.camera = PiCamera()
         self.camera.resolution = (640, 480)
         self.camera.framerate = 32
-        self.rawCapture = PiRGBArray(camera, size=(640, 480))
+        self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
         time.sleep(0.1)
         Clock.schedule_interval(self.update, 1.0 / self.camera.framerate)
 
     def update(self, dt):
-        camera.capture(self.rawCapture, format="bgr")
+        self.camera.capture(self.rawCapture, format="bgr")
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = self.rawCapture.array
