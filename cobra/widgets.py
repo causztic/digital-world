@@ -84,5 +84,5 @@ class KivyCamera(Image):
                     self.buffer = frame.tostring()
 
                 self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-                self.canvas.ask_update()
+                #self.canvas.ask_update()
                 self.buffer = None
