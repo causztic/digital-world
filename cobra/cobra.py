@@ -6,10 +6,12 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.button import Button
 from kivy.core.window import Window
 from widgets import GroceryItem, CamItem
 
-list_items = ['milk', 'apple', 'chocolate','soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
+list_items = ['milk', 'apple', 'chocolate',
+              'soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
 
 Window.size = (800, 480)
 
@@ -23,10 +25,9 @@ class InventoryScreen(Screen):
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
         label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
-        # camera = Image(source='camera.png')
+        camera = Button(text="Change to Camera", on_press=self.changeScreen)
         topbox.add_widget(label)
-        #topbox.add_widget(camera)
-        topbox.add_widget(CamItem(orientation="horizontal"))
+        topbox.add_widget(camera)
         overall_layout.add_widget(topbox)
         bottom_layout = BoxLayout(orientation='horizontal')
         inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
@@ -41,13 +42,40 @@ class InventoryScreen(Screen):
         overall_layout.add_widget(bottom_layout)
         self.add_widget(overall_layout)
 
+    def changeScreen(self):
+        self.manager.current = "Camera"
+
+
+class CameraScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(CameraScreen, self).__init__(**kwargs)
+        overall_layout = BoxLayout(
+            orientation='vertical', size=(800, 480), size_hint=(1, None))
+        topbox = BoxLayout(orientation='horizontal',
+                           height=100, size_hint=(1, None))
+        label = Label(text='Camera', color=(0, 0, 0, 1), font_size=60)
+        inventory = Button(text="Change to Inventory", on_press=self.changeScreen)
+
+        topbox.add_widget(label)
+        topbox.add_widget(inventory)
+        overall_layout.add_widget(topbox)
+        overall_layout.add_widget(CamItem())
+        self.add_widget(overall_layout)
+
+    def changeScreen(self):
+        self.manager.current = "Inventory"
 
 class CobraApp(App):
 
     def build(self):
         sm = ScreenManager()
         i_s = InventoryScreen(name='Inventory')
+        c_s = CameraScreen(name="Camera")
+
         sm.add_widget(i_s)
+        sm.add_widget(c_s)
+
         return sm
 
 if __name__ == '__main__':
