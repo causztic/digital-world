@@ -72,15 +72,13 @@ class KivyCamera(Image):
         time.sleep(0.1)
         Clock.schedule_interval(self.update, 1.0 / 30)
 
-    def rgb2gray(self, rgb):
-        return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
-
     def update(self, dt):
         self.camera.capture(self.rawCapture, format="bgr")
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
-        image = self.rgb2gray(self.rawCapture.array)
+        image = self.rawCapture.array
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
-        self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
+        self.texture.blit_buffer(gray.tostring(), colorfmt='bgr')
         self.canvas.ask_update()
