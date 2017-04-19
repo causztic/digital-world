@@ -58,10 +58,11 @@ class CamItem(BoxLayout):
     def __init__(self, **kwargs):
         super(CamItem, self).__init__(**kwargs)
         self.stream = BytesIO()
-        self.camera = Camera(resolution=(800,600), play=False)
+        self.camera = Camera(resolution=(320, 240), play=False)
 
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
         self.activate_button = ToggleButton(text="Toggle Camera", on_press=self.toggle_camera)
+
         self.add_widget(self.activate_button)
 
     def toggle_camera(self, instance):
