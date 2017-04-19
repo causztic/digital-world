@@ -69,6 +69,7 @@ class KivyCamera(Image):
         self.camera = PiCamera()
         self.camera.resolution = (800, 608)
         self.rawCapture = PiRGBArray(self.camera, size=(800, 608))
+        self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
         time.sleep(0.1)
         Clock.schedule_interval(self.update, 1.0 / 30)
 
@@ -79,8 +80,5 @@ class KivyCamera(Image):
         image = self.rawCapture.array
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
-        if self.texture is None:
-            # Create the texture
-            self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
         self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
-        #self.canvas.ask_update()
+        self.canvas.ask_update()
