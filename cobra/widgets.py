@@ -60,6 +60,7 @@ class CamItem(BoxLayout):
 
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
         self.add_widget(self.camera)
+        self.add_widget(self.take_photo_button)
 
     # def toggle_camera(self, instance):
     #     self.camera.play = not self.camera.play
