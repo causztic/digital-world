@@ -12,9 +12,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.camera import Camera
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-
-from picamera.array import PiRGBArray
-from picamera import PiCamera
 import cv2
 
 import time
@@ -79,7 +76,7 @@ class KivyCamera(Image):
         image = self.rawCapture.array
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
-        self.texture.blit_buffer(image[::-1].tostring(), colorfmt='bgr')
+        self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
         self.canvas.ask_update()
 
 
