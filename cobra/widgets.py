@@ -66,8 +66,8 @@ class KivyCamera(Image):
             if self.texture is None:
                 # Create the texture
                 self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-                self.texture.flip_vertical()
-                self.texture.flip_horizontal()
+                # self.texture.flip_vertical()
+                # self.texture.flip_horizontal()
             if ret:
                 # convert it to texture
                 try:
