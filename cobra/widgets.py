@@ -66,8 +66,7 @@ class GroceryItem(RelativeLayout):
 class KivyCamera(Image):
     def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
-        self.camera = PiCamera()
-        self.camera.resolution = (800, 608)
+        self.camera = PiCamera(resolution = (800, 608), framerate = 30)
         self.rawCapture = PiRGBArray(self.camera, size=(800, 608))
         self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
         time.sleep(0.1)
