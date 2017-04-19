@@ -8,12 +8,15 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
-from widgets import GroceryItem, CamItem, KivyCamera
+from widgets import GroceryItem, KivyCamera
+from PIL import Image as img
 
 import cv2
+import time
+import pytesseract
 
 list_items = ['milk', 'apple', 'chocolate',
-              'soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
+              'soft drinks', 'shrimp', 'steak', 'chicken', 'broccoli']
 
 Window.size = (800, 480)
 Window.clearcolor = (1, 1, 1, 1)
@@ -64,13 +67,28 @@ class CameraScreen(Screen):
         topbox.add_widget(inventory)
         overall_layout.add_widget(topbox)
 
+        bottom = BoxLayout(orientation="horizontal")
+
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
         self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
-        self.my_camera = KivyCamera(capture=self.capture, fps=30)
+        self.camera = KivyCamera(capture=self.capture, fps=30)
+        self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
 
-        overall_layout.add_widget(self.my_camera)
+        bottom.add_widget(self.camera)
+        bottom.add_widget(self.take_photo_button)
+
+        overall_layout.add_widget(bottom)
+
         self.add_widget(overall_layout)
+
+    def analyze_photo(self, instance):
+        pass
+        # f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
+        # self.camera.export_to_png(f)
+        # result = pytesseract.image_to_string(img.open(f))
+        # print result
+        # return result
 
     def changeScreen(self, *args):
         self.manager.current = "Inventory"

@@ -12,12 +12,8 @@ from kivy.uix.camera import Camera
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 
-from PIL import Image as img
-
-import time
 import cv2
 import numpy as np
-import pytesseract
 
 class GroceryItem(RelativeLayout):
 
@@ -69,6 +65,7 @@ class KivyCamera(Image):
             # Create the texture
             self.texture = Texture.create((frame.shape[1], frame.shape[0]))
             self.texture.flip_vertical()
+            self.texture.flip_horizontal()
         if ret:
             # convert it to texture
             try:
@@ -81,29 +78,3 @@ class KivyCamera(Image):
             self.texture.blit_buffer(self.buffer, colorfmt='bgr')
             self.canvas.ask_update()
             self.buffer = None
-
-class CamItem(BoxLayout):
-
-    def __init__(self, **kwargs):
-        super(CamItem, self).__init__(**kwargs)
-        self.camera = Camera(resolution=(320, 240), play=True, rotation=180)
-
-        self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
-        self.add_widget(self.camera)
-        self.add_widget(self.take_photo_button)
-
-    # def toggle_camera(self, instance):
-    #     self.camera.play = not self.camera.play
-    #     if self.camera.play:
-    #         self.add_widget(self.take_photo_button)
-    #         self.add_widget(self.camera)
-    #     else:
-    #         self.remove_widget(self.take_photo_button)
-    #         self.remove_widget(self.camera)
-
-    def analyze_photo(self, instance):
-        f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
-        self.camera.export_to_png(f)
-        result = pytesseract.image_to_string(img.open(f))
-        print result
-        return result
