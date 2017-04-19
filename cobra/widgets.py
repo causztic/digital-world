@@ -13,7 +13,10 @@ from kivy.uix.camera import Camera
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import cv2
+
 import numpy as np
 
 url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
@@ -60,23 +63,29 @@ class GroceryItem(RelativeLayout):
         firebase.put('/',self.name,self.counter.text)
 
 class KivyCamera(Image):
-    def __init__(self, capture, fps, play = True, **kwargs):
+    def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
-        self.capture = capture
-        self.play = play
+        self.camera = PiCamera()
+        self.camera.resolution = (640, 480)
+        self.camera.framerate = 32
+        self.rawCapture = PiRGBArray(camera, size=(640, 480))
+        time.sleep(0.1)
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
-        if self.play:
-            ret, frame = self.capture.read()
+        for frame in self.camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            # grab the raw NumPy array representing the image, then initialize the timestamp
+            # and occupied/unoccupied text
+            image = frame.array
+        
+            # show the frame
+            cv2.imshow("Frame", image)
+            key = cv2.waitKey(1) & 0xFF
+	        # clear the stream in preparation for the next frame
+            self.rawCapture.truncate(0)
+
             if self.texture is None:
                 # Create the texture
-                self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-                # self.texture.flip_vertical()
-                # self.texture.flip_horizontal()
-            if ret:
-                # convert it to texture
-                self.buffer = frame.imageData
-                self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+                self.texture = Texture.create(self.camera.resolution[1], self.camera.resolution[0])
+                self.texture.blit_buffer(image, colorfmt='bgr')
                 self.canvas.ask_update()
-                self.buffer = None

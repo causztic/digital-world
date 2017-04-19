@@ -80,11 +80,8 @@ class CameraScreen(Screen):
         overall_layout.add_widget(topbox)
 
         bottom = BoxLayout(orientation="horizontal")
-
-        self.capture = cv2.VideoCapture(0)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
-        self.camera = KivyCamera(capture=self.capture, fps=30)
+        
+        self.camera = KivyCamera()
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
 
         bottom.add_widget(self.camera)
@@ -119,7 +116,7 @@ class CobraApp(App):
 
     def on_stop(self):
         #without this, app will not exit even if the window is closed
-        self.c_s.capture.release()
+        pass
 
 if __name__ == '__main__':
     CobraApp().run()
