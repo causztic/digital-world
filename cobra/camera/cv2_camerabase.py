@@ -16,9 +16,9 @@ class CameraOpenCV(CameraBase):
 
     def init_camera(self):
         # consts have changed locations between versions 2 and 3
-        PROPERTY_WIDTH = cv2.cv.CV_CAP_PROP_FRAME_WIDTH
-        PROPERTY_HEIGHT = cv2.cv.CV_CAP_PROP_FRAME_HEIGHT
-        PROPERTY_FPS = cv2.cv.CV_CAP_PROP_FPS
+        PROPERTY_WIDTH = cv2.CAP_PROP_FRAME_WIDTH
+        PROPERTY_HEIGHT = cv2.CAP_PROP_FRAME_HEIGHT
+        PROPERTY_FPS = cv2.CAP_PROP_FPS
         # create the device
         self._device = cv2.VideoCapture(0)
         # Set preferred resolution
