@@ -14,7 +14,7 @@ list_items = ['milk', 'apple', 'chocolate',
               'soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
 
 Window.size = (800, 480)
-
+Window.clearcolor = (1, 1, 1, 1)
 
 class InventoryScreen(Screen):
 
