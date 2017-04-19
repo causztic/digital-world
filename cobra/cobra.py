@@ -25,8 +25,7 @@ class InventoryScreen(Screen):
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
         label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
-        camera = Button(text="Change to Camera")
-        camera.bind("on_press",  self.manager.current = "Camera")
+        camera = Button(text="Change to Camera", on_press=self.changeScreen)
         topbox.add_widget(label)
         topbox.add_widget(camera)
         overall_layout.add_widget(topbox)
@@ -43,6 +42,9 @@ class InventoryScreen(Screen):
         overall_layout.add_widget(bottom_layout)
         self.add_widget(overall_layout)
 
+    def changeScreen(self,*args):
+        self.manager.current = "Camera"
+
 
 class CameraScreen(Screen):
 
@@ -53,8 +55,7 @@ class CameraScreen(Screen):
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
         label = Label(text='Camera', color=(0, 0, 0, 1), font_size=60)
-        inventory = Button(text="Change to Inventory")
-        inventory.bind("on_press", self.manager.current = "Inventory")
+        inventory = Button(text="Change to Inventory", on_press=self.changeScreen)
 
         topbox.add_widget(label)
         topbox.add_widget(inventory)
@@ -62,6 +63,8 @@ class CameraScreen(Screen):
         overall_layout.add_widget(CamItem())
         self.add_widget(overall_layout)
 
+    def changeScreen(self, *args):
+        self.manager.current = "Inventory"
 
 class CobraApp(App):
 
