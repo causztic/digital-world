@@ -17,6 +17,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 
+import time
 import numpy as np
 
 url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
@@ -70,22 +71,17 @@ class KivyCamera(Image):
         self.camera.framerate = 32
         self.rawCapture = PiRGBArray(camera, size=(640, 480))
         time.sleep(0.1)
-        Clock.schedule_interval(self.update, 1.0 / fps)
+        Clock.schedule_interval(self.update, 1.0 / self.camera.framerate)
 
     def update(self, dt):
-        for frame in self.camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-            # grab the raw NumPy array representing the image, then initialize the timestamp
-            # and occupied/unoccupied text
-            image = frame.array
-        
-            # show the frame
-            cv2.imshow("Frame", image)
-            key = cv2.waitKey(1) & 0xFF
-	        # clear the stream in preparation for the next frame
-            self.rawCapture.truncate(0)
-
-            if self.texture is None:
-                # Create the texture
-                self.texture = Texture.create(self.camera.resolution[1], self.camera.resolution[0])
-                self.texture.blit_buffer(image, colorfmt='bgr')
-                self.canvas.ask_update()
+        camera.capture(self.rawCapture, format="bgr")
+        # grab the raw NumPy array representing the image, then initialize the timestamp
+        # and occupied/unoccupied text
+        image = self.rawCapture.array
+        # clear the stream in preparation for the next frame
+        self.rawCapture.truncate(0)
+        if self.texture is None:
+            # Create the texture
+            self.texture = Texture.create(self.camera.resolution[1], self.camera.resolution[0])
+            self.texture.blit_buffer(image, colorfmt='bgr')
+            self.canvas.ask_update()
