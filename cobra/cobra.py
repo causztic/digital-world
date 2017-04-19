@@ -8,7 +8,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
-from widgets import GroceryItem, CamItem
+from widgets import GroceryItem, CamItem, KivyCamera
+
+import cv2
 
 list_items = ['milk', 'apple', 'chocolate',
               'soft drinks', 'shrimp', 'steak', 'meat', 'broccoli']
@@ -60,7 +62,11 @@ class CameraScreen(Screen):
         topbox.add_widget(label)
         topbox.add_widget(inventory)
         overall_layout.add_widget(topbox)
-        overall_layout.add_widget(CamItem())
+
+        self.capture = cv2.VideoCapture(1)
+        self.my_camera = KivyCamera(capture=self.capture, fps=30)
+
+        overall_layout.add_widget(self.my_camera)
         self.add_widget(overall_layout)
 
     def changeScreen(self, *args):
@@ -70,13 +76,17 @@ class CobraApp(App):
 
     def build(self):
         sm = ScreenManager()
-        i_s = InventoryScreen(name='Inventory')
-        c_s = CameraScreen(name="Camera")
+        self.i_s = InventoryScreen(name='Inventory')
+        self.c_s = CameraScreen(name="Camera")
 
-        sm.add_widget(i_s)
-        sm.add_widget(c_s)
+        sm.add_widget(self.i_s)
+        sm.add_widget(self.c_s)
 
         return sm
+
+    def on_stop(self):
+        #without this, app will not exit even if the window is closed
+        self.c_s.capture.release()
 
 if __name__ == '__main__':
     CobraApp().run()
