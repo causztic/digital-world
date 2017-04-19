@@ -64,14 +64,24 @@ class KivyCamera(Image):
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
+        if self.texture is None:
+            # Create the texture
+            self.texture = Texture.create((800, 600))
+            self.texture.flip_vertical()
+
         ret, frame = self.capture.read()
+        
         if ret:
             # convert it to texture
-            buf1 = cv2.flip(frame, 0)
-            buf = buf1.tostring()
-            image_texture = Texture.create(
-                size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-            image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+            try:
+                self.buffer = frame.imageData
+            except AttributeError:
+                # On OSX there is no imageData attribute but a tostring()
+                # method.
+                self.buffer = frame.tostring()
+            image_texture.blit_buffer(self.buffer, colorfmt='bgr')
+            
+            self.buffer = None
             # display image from the texture
             self.texture = image_texture
 
