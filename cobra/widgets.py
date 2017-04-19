@@ -66,15 +66,16 @@ class GroceryItem(RelativeLayout):
 class KivyCV2Camera(Image):
     def __init__(self, capture, **kwargs):
         super(KivyCV2Camera, self).__init__(**kwargs)
-        Clock.schedule_interval(self.update, 1.0 / 30)
         self.capture = capture
-        self.texture = Texture.create((800, 600))
-
+        self.texture = Texture.create((800, 480))
+        Clock.schedule_interval(self.update, 1.0 / 30)
+        
     def update(self, dt):
         ret, frame = self.capture.read()
-        if frame:
-            self.texture.blit_buffer(frame.tostring(), colorfmt='bgr')
+        if ret:
+            self.texture.blit_buffer(frame.imageData, colorfmt='bgr')
             self.canvas.ask_update()
+            self.buffer = None
 
 class KivyCamera(Image):
     def __init__(self, **kwargs):
