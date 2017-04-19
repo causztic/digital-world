@@ -13,6 +13,7 @@ from widgets import GroceryItem, KivyCamera, KivyCV2Camera
 from PIL import Image as img
 
 import cv2
+
 import time
 import pytesseract
 
@@ -81,11 +82,12 @@ class CameraScreen(Screen):
 
         bottom = BoxLayout(orientation="horizontal")
 
-        self.capture = cv2.VideoCapture(0)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 800)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 480)
         # self.camera = KivyCamera()
-        self.camera = KivyCV2Camera(self.capture)
+        self.capture = cv2.VideoCapture(0)
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
+        self.camera = KivyCV2Camera(capture=self.capture, fps=30)
+
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
 
         bottom.add_widget(self.camera)
