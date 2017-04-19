@@ -70,7 +70,7 @@ class KivyCV2Camera(Image):
         self.capture = capture
         self.texture = Texture.create((800, 600))
 
-    def update(self):
+    def update(self, dt):
         ret, frame = cap.read()
         if frame:
             self.texture.blit_buffer(frame.tostring(), colorfmt='bgr')
