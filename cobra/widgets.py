@@ -66,11 +66,9 @@ class KivyCamera(Image):
     def update(self, dt):
         if self.texture is None:
             # Create the texture
-            self.texture = Texture.create((800, 600))
+            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
             self.texture.flip_vertical()
-
         ret, frame = self.capture.read()
-        
         if ret:
             # convert it to texture
             try:
@@ -79,10 +77,10 @@ class KivyCamera(Image):
                 # On OSX there is no imageData attribute but a tostring()
                 # method.
                 self.buffer = frame.tostring()
-                
-            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-            self.buffer = None
 
+            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+            self.canvas.ask_update()
+            self.buffer = None
 
 class CamItem(BoxLayout):
 
