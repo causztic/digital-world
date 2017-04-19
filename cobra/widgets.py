@@ -79,11 +79,9 @@ class KivyCamera(Image):
                 # On OSX there is no imageData attribute but a tostring()
                 # method.
                 self.buffer = frame.tostring()
-            image_texture.blit_buffer(self.buffer, colorfmt='bgr')
-            
+                
+            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
             self.buffer = None
-            # display image from the texture
-            self.texture = image_texture
 
 
 class CamItem(BoxLayout):
