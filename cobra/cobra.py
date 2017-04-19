@@ -22,7 +22,7 @@ url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
 firebase = firebase.FirebaseApplication(url, token)
 
-list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','meat','broccoli']
+list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','chicken','broccoli']
 Window.size = (800,480)
 
 class InventoryScreen(Screen):
@@ -42,17 +42,23 @@ class InventoryScreen(Screen):
         inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
             None, None), padding=30, size=(800, 380))
 
-        for items in list_items:
-            inventory.add_widget(GroceryItem(name=items,count = 1))
-            firebase.put('/',items,GroceryItem(name=items).counter.text)
+        show_empty = True
+        for item, count in firebase.get('/').iteritems():
+            if int(count) != 0:
+                show_empty = False
+                inventory.add_widget(GroceryItem( name=item, count = count))
 
-        inventory.height = inventory.minimum_height + 750
-        scroller = ScrollView(size=(800, 370))
-        scroller.add_widget(inventory)
-        bottom_layout.add_widget(scroller)
-        overall_layout.add_widget(bottom_layout)
+        if show_empty:
+            overall_layout.add_widget(Label(text="Your fridge is empty.. :(", color=(0,0,0,1), font_size=60))
+        else:
+            inventory.height = inventory.minimum_height + 750
+            scroller = ScrollView(size=(800, 370))
+            scroller.add_widget(inventory)
+            bottom_layout.add_widget(scroller)
+            overall_layout.add_widget(bottom_layout)
+
         self.add_widget(overall_layout)
-        
+
     def changeScreen(self,*args):
         self.manager.current = "Camera"
 
