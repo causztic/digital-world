@@ -82,6 +82,8 @@ class CameraScreen(Screen):
         bottom = BoxLayout(orientation="horizontal")
 
         self.capture = cv2.VideoCapture(0)
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 800)
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 480)
         # self.camera = KivyCamera()
         self.camera = KivyCV2Camera(self.capture)
         self.take_photo_button = Button(text="Analyze Receipt", on_press=self.analyze_photo)
