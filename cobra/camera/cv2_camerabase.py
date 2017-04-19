@@ -1,10 +1,7 @@
-from kivy.logger import Logger
+import cv2
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-from camerabase import CameraBase
-
-import cv2
-
+from camera.camerabase import CameraBase
 
 class CameraOpenCV(CameraBase):
     '''
@@ -14,6 +11,7 @@ class CameraOpenCV(CameraBase):
 
     def __init__(self, **kwargs):
         self._device = None
+        self.frame = None
         super(CameraOpenCV, self).__init__(**kwargs)
 
     def init_camera(self):
@@ -54,6 +52,7 @@ class CameraOpenCV(CameraBase):
         try:
             ret, frame = self._device.read()
             self._format = 'bgr'
+            self.frame = frame
             try:
                 self._buffer = frame.imageData
             except AttributeError:

@@ -14,11 +14,6 @@ from PIL import Image as img
 
 from camera import Camera as CustomCamera
 
-import cv2
-
-import time
-import pytesseract
-
 Window.clearcolor = (1, 1, 1, 1)
 
 url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
@@ -88,11 +83,9 @@ class CameraScreen(Screen):
         overall_layout.add_widget(topbox)
 
         bottom = BoxLayout(orientation="horizontal")
-
-        # self.camera = KivyCV2Camera()
         self.camera = CustomCamera(resolution=(320, 240))
         self.take_photo_button = Button(
-            text="Analyze Receipt", on_press=self.analyze_photo)
+            text="Analyze Receipt", on_press=self.camera.analyze_photo)
 
         bottom.add_widget(self.camera)
         bottom.add_widget(self.take_photo_button)
@@ -100,14 +93,6 @@ class CameraScreen(Screen):
         overall_layout.add_widget(bottom)
 
         self.add_widget(overall_layout)
-
-    def analyze_photo(self, instance):
-        pass
-        # f = "%s.png" % time.strftime("%Y%m%d_%H%M%S")
-        # self.camera.export_to_png(f)
-        # result = pytesseract.image_to_string(img.open(f))
-        # print result
-        # return result
 
     def changeScreen(self, *args):
         self.manager.current = "Inventory"

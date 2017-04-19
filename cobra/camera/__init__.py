@@ -23,6 +23,10 @@ from kivy.uix.image import Image
 from camera.camerabase import Camera as CoreCamera
 from kivy.properties import NumericProperty, ListProperty, BooleanProperty
 
+from PIL import Image as pil_image
+import numpy as np
+import pytesseract
+import cv2
 
 class Camera(Image):
     '''Camera class. See module documentation for more information.
@@ -99,3 +103,9 @@ class Camera(Image):
             self._camera.start()
         else:
             self._camera.stop()
+    
+    def analyze_photo(self, instance):
+        (thresh, bw_img) = cv2.threshold(self._camera.frame, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        img = pil_image.fromarray(bw_img)
+        txt = pytesseract.image_to_string(img)
+        print txt
