@@ -77,10 +77,9 @@ class KivyCamera(Image):
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
         image = self.rawCapture.array
-        print image
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
-        self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
+        self.texture.blit_buffer(image[::-1].tostring(), colorfmt='bgr')
         self.canvas.ask_update()
 
 
