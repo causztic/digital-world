@@ -52,8 +52,9 @@ class CameraScreen(Screen):
 
     def __init__(self, **kwargs):
         super(CameraScreen, self).__init__(**kwargs)
+        resolution = (800, 480)
         overall_layout = BoxLayout(
-            orientation='vertical', size=(800, 480), size_hint=(1, None))
+            orientation='vertical', size=resolution, size_hint=(1, None))
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
         label = Label(text='Camera', color=(0, 0, 0, 1), font_size=60)
@@ -64,6 +65,8 @@ class CameraScreen(Screen):
         overall_layout.add_widget(topbox)
 
         self.capture = cv2.VideoCapture(0)
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, resolution[0])
+        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, resolution[1])
         self.my_camera = KivyCamera(capture=self.capture, fps=30)
 
         overall_layout.add_widget(self.my_camera)
