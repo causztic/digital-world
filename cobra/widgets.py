@@ -63,6 +63,19 @@ class GroceryItem(RelativeLayout):
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
+class KivyCV2Camera(Image):
+    def __init__(self, capture, **kwargs):
+        super(KivyCV2Camera, self).__init__(**kwargs)
+        Clock.schedule_interval(self.update, 1.0 / 30)
+        self.capture = capture
+        self.texture = Texture.create((800, 600))
+
+    def update(self):
+        ret, frame = cap.read()
+        if frame:
+            self.texture.blit_buffer(frame.tostring(), colorfmt='bgr')
+            self.canvas.ask_update()
+
 class KivyCamera(Image):
     def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
