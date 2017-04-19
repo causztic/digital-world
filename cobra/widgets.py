@@ -54,27 +54,29 @@ class GroceryItem(RelativeLayout):
 
 
 class KivyCamera(Image):
-    def __init__(self, capture, fps, **kwargs):
+    def __init__(self, capture, fps, play = True, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
         self.capture = capture
+        self.play = play
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
-        ret, frame = self.capture.read()
-        if self.texture is None:
-            # Create the texture
-            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-            self.texture.flip_vertical()
-            self.texture.flip_horizontal()
-        if ret:
-            # convert it to texture
-            try:
-                self.buffer = frame.imageData
-            except AttributeError:
-                # On OSX there is no imageData attribute but a tostring()
-                # method.
-                self.buffer = frame.tostring()
+        if self.play:
+            ret, frame = self.capture.read()
+            if self.texture is None:
+                # Create the texture
+                self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+                self.texture.flip_vertical()
+                self.texture.flip_horizontal()
+            if ret:
+                # convert it to texture
+                try:
+                    self.buffer = frame.imageData
+                except AttributeError:
+                    # On OSX there is no imageData attribute but a tostring()
+                    # method.
+                    self.buffer = frame.tostring()
 
-            self.texture.blit_buffer(self.buffer, colorfmt='bgr')
-            self.canvas.ask_update()
-            self.buffer = None
+                self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+                self.canvas.ask_update()
+                self.buffer = None
