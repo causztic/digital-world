@@ -64,18 +64,25 @@ class GroceryItem(RelativeLayout):
         firebase.put('/',self.name,self.counter.text)
 
 class KivyCV2Camera(Image):
-    def __init__(self, capture, **kwargs):
+    def __init__(self, capture, fps, **kwargs):
         super(KivyCV2Camera, self).__init__(**kwargs)
         self.capture = capture
-        self.texture = Texture.create((800, 480))
-        Clock.schedule_interval(self.update, 1.0 / 30)
-        
+        Clock.schedule_interval(self.update, 1.0 / fps)
+
     def update(self, dt):
-        ret, frame = self.capture.read()
-        if ret:
-            self.texture.blit_buffer(frame.imageData, colorfmt='bgr')
-            self.canvas.ask_update()
-            self.buffer = None
+        if self.play:
+            ret, frame = self.capture.read()
+            if self.texture is None:
+                self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+            if ret:
+                try:
+                    self.buffer = frame.imageData
+                except AttributeError:
+                    self.buffer = frame.tostring()
+
+                self.texture.blit_buffer(self.buffer, colorfmt='bgr')
+                self.canvas.ask_update()
+                self.buffer = None
 
 class KivyCamera(Image):
     def __init__(self, **kwargs):
