@@ -1,3 +1,4 @@
+from firebase import firebase
 from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
@@ -15,11 +16,14 @@ import cv2
 import time
 import pytesseract
 
-list_items = ['milk', 'apple', 'chocolate',
-              'soft drinks', 'shrimp', 'steak', 'chicken', 'broccoli']
-
-Window.size = (800, 480)
 Window.clearcolor = (1, 1, 1, 1)
+
+url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
+token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
+firebase = firebase.FirebaseApplication(url, token)
+
+list_items = ['milk','apple','chocolate','soft drinks','shrimp','steak','meat','broccoli']
+Window.size = (800,480)
 
 class InventoryScreen(Screen):
 
@@ -39,14 +43,16 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
 
         for items in list_items:
-            inventory.add_widget(GroceryItem(name=items))
+            inventory.add_widget(GroceryItem(name=items,count = 1))
+            firebase.put('/',items,GroceryItem(name=items).counter.text)
+
         inventory.height = inventory.minimum_height + 750
         scroller = ScrollView(size=(800, 370))
         scroller.add_widget(inventory)
         bottom_layout.add_widget(scroller)
         overall_layout.add_widget(bottom_layout)
         self.add_widget(overall_layout)
-
+        
     def changeScreen(self,*args):
         self.manager.current = "Camera"
 

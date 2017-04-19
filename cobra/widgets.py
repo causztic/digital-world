@@ -1,3 +1,4 @@
+from firebase import firebase
 from kivy.uix.widget import Widget
 from kivy.uix.image  import Image
 from kivy.uix.button import Button
@@ -14,6 +15,10 @@ from kivy.graphics.texture import Texture
 
 import cv2
 import numpy as np
+
+url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
+token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
+firebase = firebase.FirebaseApplication(url, token)
 
 class GroceryItem(RelativeLayout):
 
@@ -33,8 +38,8 @@ class GroceryItem(RelativeLayout):
         remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
         minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'minus.png')
         remove_button.add_widget(minus_sign)
-        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-50, image.center_y-87.5))
-        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-9, counter_backgrnd.center_y-6.25),text='0',font_size = 30, color=(1,1,1,1))
+        counter_backgrnd = Image (size=(50,50),source = 'label.png',pos =(image.center_x-65, image.center_y-87.5))
+        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
         counter_backgrnd.add_widget(self.counter)
         image.add_widget(add_button)
         image.add_widget(remove_button)
@@ -47,11 +52,12 @@ class GroceryItem(RelativeLayout):
     def increment(self,instance):
         self.count += 1
         self.counter.text = str(self.count)
+        firebase.put('/',self.name,self.counter.text)
 
     def decrement(self,instance):
         self.count -= 1
         self.counter.text = str(self.count)
-
+        firebase.put('/',self.name,self.counter.text)
 
 class KivyCamera(Image):
     def __init__(self, capture, fps, play = True, **kwargs):
