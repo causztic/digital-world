@@ -64,11 +64,11 @@ class KivyCamera(Image):
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
+        ret, frame = self.capture.read()
         if self.texture is None:
             # Create the texture
             self.texture = Texture.create((frame.shape[1], frame.shape[0]))
             self.texture.flip_vertical()
-        ret, frame = self.capture.read()
         if ret:
             # convert it to texture
             try:
