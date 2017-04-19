@@ -77,7 +77,7 @@ class KivyCamera(Image):
         self.camera.capture(self.rawCapture, format="bgr")
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
-        image = self.rawCapture.array
+        image = self.rawCapture.array[:]
         # clear the stream in preparation for the next frame
         self.rawCapture.truncate(0)
         if self.texture is None:
