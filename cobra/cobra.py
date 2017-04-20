@@ -120,19 +120,11 @@ class CameraScreen(Screen):
     def __init__(self, **kwargs):
         super(CameraScreen, self).__init__(**kwargs)
         resolution = (800, 480)
-        overall_layout = BoxLayout(
-            orientation='vertical', size=resolution, size_hint=(1, None))
-        topbox = BoxLayout(orientation='horizontal',
-                           height=100, size_hint=(1, None))
-        label = Image(size=(150, 150), source="assets/camera.png")
+        overall_layout = GridLayout(cols=2, size=resolution, size_hint=(1, None))
+        right = BoxLayout(orientation="vertical")
         inventory = Button(text="Change to Inventory",
                            on_press=self.changeScreen)
 
-        topbox.add_widget(label)
-        topbox.add_widget(inventory)
-        overall_layout.add_widget(topbox)
-
-        bottom = BoxLayout(orientation="horizontal")
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -140,12 +132,13 @@ class CameraScreen(Screen):
         self.take_photo_button = Button(
             text="Analyze Receipt", on_press=partial(self.camera.analyze_photo, self))
 
-        bottom.add_widget(self.camera)
-        bottom.add_widget(self.take_photo_button)
+        overall_layout.add_widget(self.camera)
+        right.add_widget(inventory)
+        right.add_widget(self.take_photo_button)
 
         self.bind(on_enter=self.start_cam)
         self.bind(on_leave=self.stop_cam)
-        overall_layout.add_widget(bottom)
+        overall_layout.add_widget(right)
 
         self.add_widget(overall_layout)
 
