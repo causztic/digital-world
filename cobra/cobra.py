@@ -10,9 +10,12 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
 
+import os
 import cv2
 from widgets import GroceryItem, RawKivyCamera
 
+# load the video driver
+os.system('sudo modprobe bcm2835-v4l2')
 
 Window.clearcolor = (1, 1, 1, 1)
 
