@@ -9,6 +9,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
+from kivy.clock import Clock
 
 import os
 import cv2
@@ -48,9 +49,12 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
         self.empty_label = Label(text="Loading items!", color=(0, 0, 0, 1), font_size=60)
         self.overall_layout.add_widget(self.empty_label)
-        self.bind(on_pre_enter=self.update_from_server)
+        self.bind(on_pre_enter=self.update_with_clock)
         self.add_widget(self.overall_layout)
 
+
+    def update_with_clock(self, *args):
+        Clock.schedule_once(self.update_from_server, 0.5)
 
     def update_from_server(self, *args):
         show_empty = True
