@@ -46,7 +46,7 @@ class GroceryItem(RelativeLayout):
         # validate to not allow it to go to negative.
         if value >= 0:
             self._count = value
-            self.counter.text = str(self.count)
+            self.counter.text = str(self._count)
             self.remove_button.opacity = 1
         else:
             self.remove_button.opacity = 0
