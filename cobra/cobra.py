@@ -33,7 +33,7 @@ class InventoryScreen(Screen):
 
     def __init__(self, **kwargs):
         super(InventoryScreen, self).__init__(**kwargs)
-        overall_layout = BoxLayout(
+        self.overall_layout = BoxLayout(
             orientation='vertical', size=(800, 480), size_hint=(1, None))
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
