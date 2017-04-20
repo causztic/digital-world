@@ -29,6 +29,15 @@ firebase = firebase.FirebaseApplication(url, token)
 class GroceryItem(RelativeLayout):
 
     @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+        self.image.source = "assets/" + self._name + ".png"
+
+    @property
     def count(self):
         return self._count
 
@@ -37,43 +46,38 @@ class GroceryItem(RelativeLayout):
         # validate to not allow it to go to negative.
         if value >= 0:
             self._count = value
-            if self.counter is not None:
-                self.counter.text = str(self.count)
-            if self.remove_button:
-                self.remove_button.opacity = 1
+            self.counter.text = str(self.count)
+            self.remove_button.opacity = 1
         else:
-            if self.remove_button:
-                self.remove_button.opacity = 0
+            self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
 
         # set None for counter label first for instantiation of count.
-        self.counter = None
+        self.image = Image(size=(150,150))
+        counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(self.image.center_x-65, self.image.center_y-87.5))
+        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
+
+        add_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y), text="+")
+        plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
+        add_button.add_widget(plus_sign)
+        self.remove_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y-75), text="-")
+        minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'assets/minus.png')
+        self.remove_button.add_widget(minus_sign)
 
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
         for k in kwargs.keys():
             if k in acceptable_keys_list:
                 self.__setattr__(k, kwargs[k])
-        # self.source = self.name+".png"
-        # self.size = (150,150)
 
-        image = Image(size=(150,150), source="assets/" + self.name+".png")
-        counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(image.center_x-65, image.center_y-87.5))
-        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
-        
-        add_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y), text="+")
-        plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
-        add_button.add_widget(plus_sign)
-        self.remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
-        minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'assets/minus.png')
-        self.remove_button.add_widget(minus_sign)
         counter_backgrnd.add_widget(self.counter)
-        image.add_widget(add_button)
-        image.add_widget(self.remove_button)
-        image.add_widget(counter_backgrnd)
-        image.size_hint = (None,None)
-        self.add_widget(image)
+        self.image.add_widget(add_button)
+        self.image.add_widget(self.remove_button)
+        self.image.add_widget(counter_backgrnd)
+        self.image.size_hint = (None,None)
+        self.add_widget(self.image)
+
         add_button.bind(on_press = self.increment)
         self.remove_button.bind(on_press = self.decrement)
 
