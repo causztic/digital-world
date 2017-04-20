@@ -270,17 +270,18 @@ class RawKivyCamera(Image):
             print txt
             instance.text = "Analyze Receipt"
             choices = {"milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": [
-                "Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"], "steak": ["Steak"],
+                "Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"], "steak": ["Sirloin", "Steak"],
                 "shrimp": ["Shrimp", "Prawn"]}
             all_values = [item for sublist in choices.values()
                           for item in sublist]
             for line in txt.split("\n"):
                 # iterate through the words, skipping letters less than 4
                 for word in [word for word in line.split() if len(word) >= 4]:
+                    found = False
                     match = process.extractOne(word, all_values)
                     # match[0] is value, match[1] is score
                     if match is not None:
-                        if match[1] > 75:  # only care about those that are decently close
+                        if match[1] > 75:  # only care about those that have a high-enough score
                             for k, v in choices.iteritems():
                                 if match[0] in v:
                                     # add the count to the inventory
@@ -290,4 +291,11 @@ class RawKivyCamera(Image):
                                         k].count += 1
                                     firebase.put('/', k, str(c + 1))
                                     print "%s matches %s" % (word, k)
+                                    #this allows us to break the entire sentence to avoid duplicates
+                                    found = True
                                     break
+                    if found:
+                        # the keyword is found in the sentence. 
+                        # Break the for loop and proceed to the next line
+                        # to prevent duplicates.
+                        break
