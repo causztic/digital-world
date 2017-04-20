@@ -52,6 +52,8 @@ class InventoryScreen(Screen):
         for key, value in groceries.iteritems():
             self.grocery_widgets[key] = GroceryItem(name=key, count=value)
 
+        self.update_from_server()
+
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
             None, None), padding=30, size=(800, 380))
