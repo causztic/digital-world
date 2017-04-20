@@ -13,7 +13,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-
+from kivy.lang import Builder
 # python library imports
 
 import cv2
@@ -30,13 +30,31 @@ url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
 firebase = firebase.FirebaseApplication(url, token)
 
+Builder.load_string("""
+<ButtonWithImage>:
+    Button:
+        StackLayout:
+            pos: self.parent.pos
+            size: self.parent.size
+            orientation: 'lr-tb'
+            Image:
+                source: 'kivy.png'
+                size_hint_x: None
+                width: 74
+            Label:
+                size_hint_x: None
+                width: 100
+                text: "The text"
+""")
+
 class ButtonWithImage(Button):
-    def __init__(self, logo, text, width = 150, **kwargs):
-        super(ButtonWithImage, self).__init__(**kwargs)
-        stack = StackLayout(pos = self.parent.pos, size = self.parent.size, orientation = 'lr-tb')
-        stack.add_widget(Image(source=logo, size_hint_x = None, width = width))
-        stack.add_widget(Label(size_hint_x = None, width = 100, text = text))
-        self.add_widget(stack)
+    pass
+    # def __init__(self, logo, text, width = 150, **kwargs):
+    #     super(ButtonWithImage, self).__init__(**kwargs)
+    #     stack = StackLayout(pos = self.pos, size = self.size, orientation = 'lr-tb')
+    #     stack.add_widget(Image(source=logo, size_hint_x = None, width = width))
+    #     stack.add_widget(Label(size_hint_x = None, width = 100, text = text))
+    #     self.add_widget(stack)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):
