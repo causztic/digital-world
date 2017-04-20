@@ -35,10 +35,13 @@ class GroceryItem(RelativeLayout):
     @count.setter
     def count(self, value):
         # validate to not allow it to go to negative.
-        if type(value) == int and value >= 0:
+        if value >= 0:
             self._count = value
             if self.counter is not None:
                 self.counter.text = str(self.count)
+            self.remove_button.opacity = 1
+        else:
+            self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
@@ -60,17 +63,17 @@ class GroceryItem(RelativeLayout):
         add_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y), text="+")
         plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
         add_button.add_widget(plus_sign)
-        remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
+        self.remove_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y-75), text="-")
         minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'assets/minus.png')
-        remove_button.add_widget(minus_sign)
+        self.remove_button.add_widget(minus_sign)
         counter_backgrnd.add_widget(self.counter)
         image.add_widget(add_button)
-        image.add_widget(remove_button)
+        image.add_widget(self.remove_button)
         image.add_widget(counter_backgrnd)
         image.size_hint = (None,None)
         self.add_widget(image)
         add_button.bind(on_press = self.increment)
-        remove_button.bind(on_press = self.decrement)
+        self.remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
         self.count = self.count + 1
