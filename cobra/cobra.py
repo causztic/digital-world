@@ -26,7 +26,7 @@ url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
 firebase = firebase.FirebaseApplication(url, token)
 
-groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft_drinks': 0,
+groceries = {'milk': 1, 'apple': 0, 'chocolate': 1, 'soft_drinks': 3,
              'shrimp': 0, 'steak': 0, 'chicken': 0, 'broccoli': 0}
 
 Window.size = (800, 480)
@@ -70,11 +70,13 @@ class InventoryScreen(Screen):
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated (used for testing) and display them.
         for item, count in firebase.get('/').iteritems():
-            if (int(count) + groceries[item]) != 0:
-                # get the relevant GroceryItem and update the data
-                self.grocery_widgets[item].count = count
-                self.show_empty = False
-                self.inventory.add_widget(self.grocery_widgets[item])
+            # check if item is enabled in the application
+            if groceries.has_key(item):
+                if (int(count) + groceries[item]) != 0:
+                    # get the relevant GroceryItem and update the data
+                    self.grocery_widgets[item].count = count
+                    self.show_empty = False
+                    self.inventory.add_widget(self.grocery_widgets[item])
 
         if self.show_empty:
             self.empty_label.text = "Your Fridge is empty :("
