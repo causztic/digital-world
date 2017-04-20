@@ -212,18 +212,22 @@ class RawKivyCamera(Image):
 
     def analyze_photo(self, screen, instance):
         if self.frame is not None:
+            # convert the image to grayscale and add a threshold to it to increase the word contrast.
+            # this will increase the accuracy of the tesseract library.
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
+
             print txt
+            
             choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"] }
             all_values = [item for sublist in choices.values() for item in sublist]
             for line in txt.split("\n"):
-                for word in [word for word in txt.split() if len(word) >= 3]: # iterate through the words, skipping letters less than 3
+                for word in [word for word in line.split() if len(word) >= 4]: # iterate through the words, skipping letters less than 4
                     match = process.extractOne(word, all_values)
                     # match[0] is value, match[1] is score
                     if match is not None:
-                        if match[1] > 50:
+                        if match[1] > 75: # only care about those that are decently close
                             for k, v in choices.iteritems():
                                 if match[0] in v:
                                     # add the count to the inventory
