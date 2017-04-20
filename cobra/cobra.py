@@ -49,16 +49,15 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
         self.empty_label = Label(text="Loading items!", color=(0, 0, 0, 1), font_size=60)
         self.overall_layout.add_widget(self.empty_label)
-        self.bind(on_pre_enter=self.update_with_clock)
+        self.bind(on_pre_enter=self.update_from_server)
         self.add_widget(self.overall_layout)
 
-
-    def update_with_clock(self, *args):
-        Clock.schedule_once(self.update_from_server, 0.5)
-
     def update_from_server(self, *args):
+        firebase.get_async('/', None, callback=self.update_groceries)
+
+    def update_groceries(self, response):
         show_empty = True
-        for item, count in firebase.get('/').iteritems():
+        for item, count in response.iteritems():
             if int(count) != 0:
                 show_empty = False
                 self.inventory.add_widget(GroceryItem(name=item, count=count))
@@ -71,7 +70,6 @@ class InventoryScreen(Screen):
             scroller.add_widget(self.inventory)
             self.bottom_layout.add_widget(scroller)
             self.overall_layout.add_widget(self.bottom_layout)
-
 
     def changeScreen(self, *args):
         self.manager.current = "Camera"
