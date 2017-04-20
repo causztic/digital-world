@@ -51,7 +51,8 @@ class InventoryScreen(Screen):
         self.topbox = BoxLayout(orientation='horizontal',
                                 height=100, size_hint=(1, None))
         label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
-        camera = Button(text="Scan Receipt", on_press=self.changeScreen)
+        camera = Button(on_press=self.changeScreen)
+        camera.add_widget(Image(source="assets/camera.png"))
         self.topbox.add_widget(label)
         self.topbox.add_widget(camera)
 
@@ -100,7 +101,7 @@ class InventoryScreen(Screen):
                     # get the relevant GroceryItem and update the data
                     self.grocery_widgets[item].count = total
                     self.inventory.add_widget(self.grocery_widgets[item])
-
+                    self.canvas.ask_update()
         if self.show_empty:
             self.empty_label.text = "Your Fridge is empty :("
             self.overall_layout.add_widget(self.empty_label)
