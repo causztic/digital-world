@@ -31,14 +31,15 @@ token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authe
 firebase = firebase.FirebaseApplication(url, token)
 
 class ButtonWithImage(RelativeLayout):
-    def __init__(self, logo, text, size=(100,100), **kwargs):
+    def __init__(self, logo, text, on_press, size=(100,100), **kwargs):
         super(ButtonWithImage, self).__init__(**kwargs)
-        img = Image(source=logo, size=size)
+        self.img = Image(source=logo, size=size)
         self.button = Button(size=self.size)
-        self.label = Label(text=text)
-        img.add_widget(self.button)
-        img.add_widget(self.label)
-        self.add_widget(img)
+        self.button.bind(on_press = on_press)
+        self.label = Label(text=text, pos=self.button.center)
+        self.button.add_widget(self.img)
+        self.button.add_widget(self.label)
+        self.add_widget(self.button)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):
