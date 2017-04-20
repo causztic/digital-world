@@ -166,7 +166,7 @@ class RawKivyCamera(Image):
                 # flip the image correctly to detect shapes and to analyze in the future
                 self.frame = cv2.flip(cv2.flip(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), 0), 1)
                 self.buffer = self.detect_shapes(frame)
-                self.rgb = cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB)
+                self.rgb = cv2.flip(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB), 0)
                 self.texture.blit_buffer(self.rgb.tostring(), colorfmt='rgb', bufferfmt='ubyte')
                 self.canvas.ask_update()
                 self.buffer = None
