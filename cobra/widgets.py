@@ -25,9 +25,9 @@ url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
 firebase = firebase.FirebaseApplication(url, token)
 
+""" Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):
-
-    def __init__(self,**kwargs):
+    def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
         self.count = 0
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
@@ -65,6 +65,9 @@ class GroceryItem(RelativeLayout):
         firebase.put('/',self.name,self.counter.text)
 
 
+"""
+    ShapeDetector from http://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
+"""
 class ShapeDetector(object):
 	def __init__(self):
 		pass
@@ -102,6 +105,11 @@ class ShapeDetector(object):
 		# return the name of the shape
 		return shape
 
+"""
+    Custom Camera class instead of using Kivy Camera because Kivy Camera has a memory leak on Raspberry Pi,
+    in addition to exposing the matrix to perform operations on the image frame.
+"""
+
 class RawKivyCamera(Image):
     def __init__(self, capture, fps, play = False, **kwargs):
         super(RawKivyCamera, self).__init__(**kwargs)
@@ -116,8 +124,7 @@ class RawKivyCamera(Image):
             if self.texture is None:
                 self.texture = Texture.create((frame.shape[1], frame.shape[0]))
             if ret:
-                # convert the resized image to grayscale, blur it slightly,
-                # and threshold it
+                # flip the image correctly to detect shapes and to analyze in the future
                 self.frame = cv2.flip(cv2.flip(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), 0), 1)
                 self.buffer = self.detect_shapes(frame)
                 self.rgb = cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB)
@@ -125,6 +132,11 @@ class RawKivyCamera(Image):
                 self.canvas.ask_update()
                 self.buffer = None
     
+    """
+        Function to draw contours around shapes to detect the receipt object.
+        http://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
+        Add a slight error case to M["m00"] to prevent it from division by zero.BufferError
+    """
     def detect_shapes(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -153,7 +165,12 @@ class RawKivyCamera(Image):
         
         return frame
 
-    
+    """ 
+        Analyzes the photo with OpenCV, PyTesseract and FuzzyWuzzy.
+        Converts the image from BGR to grayscale and add a threshold to increase the accuracy.
+        Afterwards, matches the scanned lines to the available choices and adds them to the item count.
+    """
+
     def analyze_photo(self, instance):
         if self.frame is not None:
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
