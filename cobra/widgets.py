@@ -219,15 +219,16 @@ class RawKivyCamera(Image):
             choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"] }
             all_values = [item for sublist in choices.values() for item in sublist]
             for line in txt.split("\n"):
-                match = process.extractOne(line, all_values)
-                # match[0] is value, match[1] is score
-                if match is not None:
-                    if match[1] > 50:
-                        for k, v in choices.iteritems():
-                            if match[0] in v:
-                                # add the count to the inventory
-                                c = screen.manager.get_screen("Inventory").grocery_widgets[k].count
-                                screen.manager.get_screen("Inventory").grocery_widgets[k].count += 1
-                                firebase.put('/', k, str(c + 1))
-                                print "%s matches %s" % (line, k)
-                                break
+                for word in [word for word in txt.split() if len(word) >= 3]: # iterate through the words, skipping letters less than 3
+                    match = process.extractOne(word, all_values)
+                    # match[0] is value, match[1] is score
+                    if match is not None:
+                        if match[1] > 50:
+                            for k, v in choices.iteritems():
+                                if match[0] in v:
+                                    # add the count to the inventory
+                                    c = screen.manager.get_screen("Inventory").grocery_widgets[k].count
+                                    screen.manager.get_screen("Inventory").grocery_widgets[k].count += 1
+                                    firebase.put('/', k, str(c + 1))
+                                    print "%s matches %s" % (word, k)
+                                    break
