@@ -85,11 +85,11 @@ class RawKivyCamera(Image):
                 self.buffer = None
 
     def analyze_photo(self, instance):
-        if self.th:
+        if self.th is not None:
             txt = pytesseract.image_to_string(pil_image.fromarray(self.th))
             print txt
 
     def outline(self, frame):
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame.flip(0), cv2.COLOR_BGR2GRAY)
         th = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
         return th
