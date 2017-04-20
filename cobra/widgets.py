@@ -87,6 +87,7 @@ class RawKivyCamera(Image):
                 self.buffer = None
 
     def analyze_photo(self, instance):
+        cv2.imwrite("test.png", self.th)
         if self.th is not None:
             txt = pytesseract.image_to_string(pil_image.fromarray(self.th))
             print txt
