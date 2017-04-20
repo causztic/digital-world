@@ -118,6 +118,7 @@ class RawKivyCamera(Image):
             if ret:
                 # convert the resized image to grayscale, blur it slightly,
                 # and threshold it
+                self.frame = cv2.flip(cv2.flip(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), 0), 1)
                 self.buffer = self.detect_shapes(frame)
                 self.rgb = cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB)
                 self.texture.blit_buffer(self.rgb.tostring(), colorfmt='rgb', bufferfmt='ubyte')
@@ -146,14 +147,15 @@ class RawKivyCamera(Image):
             c = c.astype("float")
             c = c.astype("int")
             cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
-            cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                0.5, (255, 255, 255), 2)
+
+            # cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+            #     0.5, (255, 255, 255), 2)
         
         return frame
 
     
     def analyze_photo(self, instance):
-        if self.rgb is not None:
-            cv2.imwrite("test.png", self.rgb)
-            txt = pytesseract.image_to_string(pil_image.fromarray(self.rgb))
+        if self.frame is not None:
+            cv2.imwrite("test.png", self.frame)
+            txt = pytesseract.image_to_string(pil_image.fromarray(self.frame))
             print txt
