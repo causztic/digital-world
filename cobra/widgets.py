@@ -91,9 +91,9 @@ class RawKivyCamera(Image):
         if self.texture is None:
             self.texture = Texture.create((frame.shape[1], frame.shape[0]))
         if ret:
-            self.buffer = frame.tostring()
+            self.buffer = frame
             # flip it to rgb
-            self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2GRAY), colorfmt='rgb', bufferfmt='ubyte')
+            self.texture.blit_buffer(self.buffer.tostring(), colorfmt='rgb', bufferfmt='ubyte')
             self.canvas.ask_update()
             self.buffer = None
 
