@@ -33,10 +33,10 @@ class GroceryItem(RelativeLayout):
         return self._count
 
     @count.setter
-    def count(self, count):
+    def count(self, value):
         # validate to not allow it to go to negative.
-        if type(count) == int and count >= 0:
-            self._count = count
+        if type(value) == int and value >= 0:
+            self._count = value
             if self.counter is not None:
                 self.counter.text = str(self.count)
 
@@ -73,12 +73,12 @@ class GroceryItem(RelativeLayout):
         remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
-        self.count(self.count+1)
+        self.count = self.count + 1
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
     def decrement(self,instance):
-        self.count(self.count-1)
+        self.count = self.count - 1
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
