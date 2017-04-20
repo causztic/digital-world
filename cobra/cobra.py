@@ -65,6 +65,7 @@ class InventoryScreen(Screen):
         if show_empty:
             self.empty_label.text = "Your Fridge is empty :("
         else:
+            self.overall_layout.remove_widget(self.empty_label)
             self.inventory.height = self.inventory.minimum_height + 750
             scroller = ScrollView(size=(800, 370))
             scroller.add_widget(self.inventory)
