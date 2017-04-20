@@ -156,6 +156,7 @@ class RawKivyCamera(Image):
     
     def analyze_photo(self, instance):
         if self.frame is not None:
-            (thresh, bw_img) = cv2.threshold(self.frame, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+            gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
+            (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
             print txt
