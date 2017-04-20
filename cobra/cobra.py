@@ -57,6 +57,11 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
         self.empty_label = Label(text="", color=(0, 0, 0, 1), font_size=60)
         self.bind(on_pre_enter=self.update_from_server)
+        
+        scroller = ScrollView(size=(800, 370))
+        scroller.add_widget(self.inventory)
+        self.bottom_layout.add_widget(scroller)
+        
         self.add_widget(self.overall_layout)
 
     def update_from_server(self, *args):
@@ -87,9 +92,6 @@ class InventoryScreen(Screen):
             # dynamically set the height of the gridlayout based 
             # on the number of stuff in the inventory to prevent clipping
             self.inventory.height = 300 * len(self.inventory.children) / 3
-            scroller = ScrollView(size=(800, 370))
-            scroller.add_widget(self.inventory)
-            self.bottom_layout.add_widget(scroller)
             self.overall_layout.add_widget(self.bottom_layout)
 
     def changeScreen(self, *args):
