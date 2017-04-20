@@ -164,6 +164,7 @@ class RawKivyCamera(Image):
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
+            print txt
             choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "cola": ["Coca-Cola"] }
             for line in txt.split("\n"):
                 all_values = [item for sublist in choices.values() for item in sublist]
