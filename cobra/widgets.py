@@ -51,10 +51,16 @@ class GroceryItem(RelativeLayout):
             self.counter.text = str(self._count)
             if self.name is not None:
                 firebase.put('/', self.name, self.counter.text)
-            self.remove_button.opacity = 1
-            self.remove_button.disabled = False
+                # re-enable the buttons
+                self.add_button.disabled = False
+                self.remove_button.disabled = False
+                self.add_button.opacity = 1
+                self.remove_button.opacity = 1
         # set the button to be invisible if it is zero or lesser
         if value <= 0:
+            self.add_button.disabled = False
+            self.remove_button.disabled = False
+            self.add_button.opacity = 1
             self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
@@ -66,9 +72,9 @@ class GroceryItem(RelativeLayout):
         counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(self.image.center_x-65, self.image.center_y-87.5))
         self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),font_size = 30, color=(1,1,1,1))
 
-        add_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y), text="+")
-        plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
-        add_button.add_widget(plus_sign)
+        self.add_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y), text="+")
+        plus_sign = Image(size = (50,50),pos = (self.add_button.center_x-25,self.add_button.center_y-25),source = 'assets/plus.png')
+        self.add_button.add_widget(plus_sign)
         self.remove_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y-75), text="-")
         minus_sign = Image(size = (50,50),pos = (self.remove_button.center_x-25,self.remove_button.center_y-25),source = 'assets/minus.png')
         self.remove_button.add_widget(minus_sign)
@@ -79,7 +85,7 @@ class GroceryItem(RelativeLayout):
                 self.__setattr__(k, kwargs[k])
 
         counter_backgrnd.add_widget(self.counter)
-        self.image.add_widget(add_button)
+        self.image.add_widget(self.add_button)
         self.image.add_widget(self.remove_button)
         self.image.add_widget(counter_backgrnd)
         self.image.size_hint = (None,None)
@@ -89,15 +95,14 @@ class GroceryItem(RelativeLayout):
         self.remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
-        self.remove_button.opacity = 0.5
-        self.remove_button.disabled = True
+        instance.opacity = 0.5
+        instance.disabled = True
         self.count = self.count + 1
 
     def decrement(self,instance):
-        self.remove_button.opacity = 0.5
-        self.remove_button.disabled = True
+        instance.opacity = 0.5
+        instance.disabled = True
         self.count = self.count - 1
-
 
 """
     ShapeDetector from http://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
