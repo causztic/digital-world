@@ -30,31 +30,15 @@ url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
 firebase = firebase.FirebaseApplication(url, token)
 
-Builder.load_string("""
-<ButtonWithImage>:
-    Button:
-        StackLayout:
-            pos: self.parent.pos
-            size: self.parent.size
-            orientation: 'lr-tb'
-            Image:
-                source: 'kivy.png'
-                size_hint_x: None
-                width: 74
-            Label:
-                size_hint_x: None
-                width: 100
-                text: "The text"
-""")
-
-class ButtonWithImage(Button):
-    pass
-    # def __init__(self, logo, text, width = 150, **kwargs):
-    #     super(ButtonWithImage, self).__init__(**kwargs)
-    #     stack = StackLayout(pos = self.pos, size = self.size, orientation = 'lr-tb')
-    #     stack.add_widget(Image(source=logo, size_hint_x = None, width = width))
-    #     stack.add_widget(Label(size_hint_x = None, width = 100, text = text))
-    #     self.add_widget(stack)
+class ButtonWithImage(RelativeLayout):
+    def __init__(self, logo, text, size=(100,100), **kwargs):
+        super(ButtonWithImage, self).__init__(**kwargs)
+        img = Image(source=logo, size=size)
+        self.button = Button(size=self.size)
+        self.label = Label(text=text)
+        img.add_widget(button)
+        img.add_widget(label)
+        self.add_widget(img)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):
