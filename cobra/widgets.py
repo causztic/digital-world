@@ -14,9 +14,11 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from PIL import Image as pil_image
 
+
 import cv2
 import imutils
 import time
+import pytesseract
 import numpy as np
 
 url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
