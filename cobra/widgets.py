@@ -33,7 +33,7 @@ class GroceryItem(RelativeLayout):
         return self._count
 
     @count.setter
-    def set_count(self, count):
+    def count(self, count):
         self._count = count
         if self.counter is not None:
             self.counter.text = str(self.count)
