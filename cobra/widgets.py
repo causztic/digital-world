@@ -177,7 +177,7 @@ class RawKivyCamera(Image):
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
             print txt
-            choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "cola": ["Coca-Cola"] }
+            choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"] }
             all_values = [item for sublist in choices.values() for item in sublist]
             for line in txt.split("\n"):
                 match = process.extractOne(line, all_values)
@@ -187,8 +187,8 @@ class RawKivyCamera(Image):
                         for k, v in choices.iteritems():
                             if match[0] in v:
                                 # add the count to the inventory
-                                c = screen.manager.get_screen("Inventory").grocery_widgets[item].count
-                                screen.manager.get_screen("Inventory").grocery_widgets[item].count += 1
-                                firebase.put('/',item, str(c + 1))
+                                c = screen.manager.get_screen("Inventory").grocery_widgets[k].count
+                                screen.manager.get_screen("Inventory").grocery_widgets[k].count += 1
+                                firebase.put('/', k, str(c + 1))
                                 print "%s matches %s" % (line, k)
                                 break
