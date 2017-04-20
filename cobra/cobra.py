@@ -133,6 +133,8 @@ class CameraScreen(Screen):
 class CobraApp(App):
 
     def build(self):
+        global root
+        root = self.root
         sm = ScreenManager()
         self.i_s = InventoryScreen(name='Inventory')
         self.c_s = CameraScreen(name="Camera")
