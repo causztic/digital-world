@@ -19,8 +19,6 @@ from widgets import GroceryItem, RawKivyCamera
 # load the video driver
 os.system('sudo modprobe bcm2835-v4l2')
 
-Window.clearcolor = (1, 1, 1, 1)
-
 url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 # unique token used for authentication
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
