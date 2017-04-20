@@ -9,7 +9,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.camera import Camera
+
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 import cv2
@@ -60,26 +60,6 @@ class GroceryItem(RelativeLayout):
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
-class KivyCamera(Image):
-    def __init__(self, **kwargs):
-        super(KivyCamera, self).__init__(**kwargs)
-        self.camera = PiCamera(resolution =(320, 240), framerate = 30)
-        self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
-        self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
-        time.sleep(0.1)
-        Clock.schedule_interval(self.update, 1.0 / 30)
-
-    def update(self, dt):
-        self.camera.capture(self.rawCapture, format="bgr")
-        # grab the raw NumPy array representing the image, then initialize the timestamp
-        # and occupied/unoccupied text
-        image = self.rawCapture.array
-        # clear the stream in preparation for the next frame
-        self.rawCapture.truncate(0)
-        self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
-        self.canvas.ask_update()
-
-
 class RawKivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
         super(RawKivyCamera, self).__init__(**kwargs)
@@ -91,11 +71,78 @@ class RawKivyCamera(Image):
         if self.texture is None:
             self.texture = Texture.create((frame.shape[1], frame.shape[0]))
         if ret:
-            self.buffer = frame
-            # flip it to rgb
-            self.texture.blit_buffer(self.buffer.tostring(), colorfmt='rgb', bufferfmt='ubyte')
+            # convert the resized image to grayscale, blur it slightly,
+            # and threshold it
+            self.buffer = self.detect_shapes(frame)
+            self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
             self.canvas.ask_update()
             self.buffer = None
 
     def analyze_photo(self, instance):
         pass
+
+    def detect_shapes(self, frame):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+        # find contours in the thresholded image and initialize the
+        # shape detector
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+        sd = ShapeDetector()
+        # loop over the contours
+        for c in cnts:
+            # compute the center of the contour, then detect the name of the
+            # shape using only the contour
+            M = cv2.moments(c)
+            cX = int((M["m10"] / M["m00"]) * ratio)
+            cY = int((M["m01"] / M["m00"]) * ratio)
+            shape = sd.detect(c)
+        
+            # multiply the contour (x, y)-coordinates by the resize ratio,
+            # then draw the contours and the name of the shape on the image
+            c = c.astype("float")
+            c *= ratio
+            c = c.astype("int")
+            cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
+            cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                0.5, (255, 255, 255), 2)
+            
+            return frame
+
+class ShapeDetector(object):
+    def __init__(self):
+		pass
+ 
+    def detect(self, c):
+		# initialize the shape name and approximate the contour
+		shape = "unidentified"
+		peri = cv2.arcLength(c, True)
+		approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+
+        # if the shape is a triangle, it will have 3 vertices
+		if len(approx) == 3:
+			shape = "triangle"
+ 
+		# if the shape has 4 vertices, it is either a square or
+		# a rectangle
+		elif len(approx) == 4:
+			# compute the bounding box of the contour and use the
+			# bounding box to compute the aspect ratio
+			(x, y, w, h) = cv2.boundingRect(approx)
+			ar = w / float(h)
+ 
+			# a square will have an aspect ratio that is approximately
+			# equal to one, otherwise, the shape is a rectangle
+			shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+ 
+		# if the shape is a pentagon, it will have 5 vertices
+		elif len(approx) == 5:
+			shape = "pentagon"
+ 
+		# otherwise, we assume the shape is a circle
+		else:
+			shape = "circle"
+ 
+		# return the name of the shape
+		return shape
