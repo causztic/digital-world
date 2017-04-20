@@ -84,16 +84,14 @@ class RawKivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
         super(RawKivyCamera, self).__init__(**kwargs)
         self.capture = capture
-        self.texture = Texture.create((800, 480))
-        self.texture.add_reload_observer(self.update)
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
         ret, frame = self.capture.read()
-
+        if self.texture is None:
+            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
         if ret:
             self.buffer = frame.tostring()
-
             self.texture.blit_buffer(self.buffer, colorfmt='bgr')
             self.canvas.ask_update()
             self.buffer = None
