@@ -179,12 +179,12 @@ class RawKivyCamera(Image):
             print txt
             choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "cola": ["Coca-Cola"] }
             all_values = [item for sublist in choices.values() for item in sublist]
-            if txt is not None:
-                for line in txt.split("\n"):
-                    if line is not None:
-                        value, score = process.extractOne(line, all_values)
-                        if score > 50:
-                            for k, v in choices.iteritems():
-                                if value in v:
-                                    print "%s matches %s" % (line, k)
-                                    break
+            for line in txt.split("\n"):
+                match = process.extractOne(line, all_values)
+                # match[0] is value, match[1] is score
+                if match is not None:
+                    if match[1] > 50:
+                        for k, v in choices.iteritems():
+                            if match[0] in v:
+                                print "%s matches %s" % (line, k)
+                                break
