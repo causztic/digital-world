@@ -160,6 +160,8 @@ class RawKivyCamera(Image):
         self.capture = capture
         self.play = play
         self.rgb = None
+        self.size_hint_x = None
+        self.width = 640
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
@@ -216,6 +218,8 @@ class RawKivyCamera(Image):
     """
 
     def analyze_photo(self, screen, instance):
+        instance.disabled = True
+        instance.text = "Analyzing.."
         if self.frame is not None:
             # convert the image to grayscale and add a threshold to it to increase the word contrast.
             # this will increase the accuracy of the tesseract library.
@@ -224,7 +228,7 @@ class RawKivyCamera(Image):
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
 
             print txt
-            
+            instance.text = "Analyze Receipt"
             choices = { "milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": ["Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"] }
             all_values = [item for sublist in choices.values() for item in sublist]
             for line in txt.split("\n"):
