@@ -27,9 +27,17 @@ firebase = firebase.FirebaseApplication(url, token)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):
+
+    @property
+    def count(self):
+        return self._count
+
+    @count.setter
+    def set_count(self, count):
+        self._count = count
+
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
-        self.count = 0
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
         for k in kwargs.keys():
             if k in acceptable_keys_list:
