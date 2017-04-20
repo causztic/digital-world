@@ -66,12 +66,12 @@ class InventoryScreen(Screen):
 
         self.add_widget(self.overall_layout)
 
-    def update_from_server(self):
+    def update_from_server(self, *args):
         """ Pull the data from the server and call the updating as a separate process """
         self.empty_label.text = "Loading items!"
         Clock.schedule_once(self.update_groceries, 1)
 
-    def update_groceries(self):
+    def update_groceries(self, *args):
         """ Update the groceries according to Firebase. """
         # clear items to reset the addition of widgets
         self.overall_layout.clear_widgets() 
