@@ -59,7 +59,7 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         show_empty = True
-        for item, count in firebase.get('/').iteritems():
+        for item, count in firebase.get('/', None).iteritems():
             if int(count) != 0:
                 show_empty = False
                 self.inventory.add_widget(GroceryItem(name=item, count=count))
