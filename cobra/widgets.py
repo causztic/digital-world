@@ -12,8 +12,9 @@ from kivy.uix.gridlayout import GridLayout
 
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-import cv2
+from PIL import Image as pil_image
 
+import cv2
 import imutils
 import time
 import numpy as np
@@ -66,6 +67,7 @@ class RawKivyCamera(Image):
         super(RawKivyCamera, self).__init__(**kwargs)
         self.capture = capture
         self.play = play
+        self.th = None
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
@@ -76,13 +78,16 @@ class RawKivyCamera(Image):
             if ret:
                 # convert the resized image to grayscale, blur it slightly,
                 # and threshold it
-                self.buffer = self.outline(frame)
-                self.texture.blit_buffer(self.buffer.tostring(), colorfmt='rgb', bufferfmt='ubyte')
+                self.buffer = frame
+                self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
+                self.th = th
                 self.canvas.ask_update()
                 self.buffer = None
 
     def analyze_photo(self, instance):
-        pass
+        if self.th:
+            txt = pytesseract.image_to_string(pil_image.fromarray(self.th))
+            print txt
 
     def outline(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
