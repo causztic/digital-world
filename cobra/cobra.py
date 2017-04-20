@@ -94,6 +94,8 @@ class CameraScreen(Screen):
         bottom.add_widget(self.camera)
         bottom.add_widget(self.take_photo_button)
 
+        self.bind(on_enter=self.start_cam)
+        self.bind(on_leave=self.stop_cam)
         overall_layout.add_widget(bottom)
 
         self.add_widget(overall_layout)
@@ -101,6 +103,11 @@ class CameraScreen(Screen):
     def changeScreen(self, *args):
         self.manager.current = "Inventory"
 
+    def start_cam(self, *args):
+        self.camera.play = True
+    
+    def stop_cam(self, *args):
+        self.camera.play = False
 
 class CobraApp(App):
 

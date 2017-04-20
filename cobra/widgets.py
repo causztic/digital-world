@@ -62,22 +62,24 @@ class GroceryItem(RelativeLayout):
         firebase.put('/',self.name,self.counter.text)
 
 class RawKivyCamera(Image):
-    def __init__(self, capture, fps, **kwargs):
+    def __init__(self, capture, fps, play = False, **kwargs):
         super(RawKivyCamera, self).__init__(**kwargs)
         self.capture = capture
+        self.play = play
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
-        ret, frame = self.capture.read()
-        if self.texture is None:
-            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
-        if ret:
-            # convert the resized image to grayscale, blur it slightly,
-            # and threshold it
-            self.buffer = self.detect_shapes(frame)
-            self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
-            self.canvas.ask_update()
-            self.buffer = None
+        if self.play:
+            ret, frame = self.capture.read()
+            if self.texture is None:
+                self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+            if ret:
+                # convert the resized image to grayscale, blur it slightly,
+                # and threshold it
+                self.buffer = self.detect_shapes(frame)
+                self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
+                self.canvas.ask_update()
+                self.buffer = None
 
     def analyze_photo(self, instance):
         pass
