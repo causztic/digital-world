@@ -34,8 +34,9 @@ class GroceryItem(RelativeLayout):
 
     @name.setter
     def name(self, value):
-        self._name = value
-        self.image.source = "assets/" + self._name + ".png"
+        if value is not None:
+            self._name = value
+            self.image.source = "assets/" + self._name + ".png"
 
     @property
     def count(self):
@@ -49,13 +50,15 @@ class GroceryItem(RelativeLayout):
             self._count = value
             self.counter.text = str(self._count)
             self.remove_button.opacity = 1
-            firebase.put('/',self.name,self.counter.text)
-        
+            if self.name is not None:
+                firebase.put('/', self.name, self.counter.text)
+
         # set the button to be invisible if it is zero or lesser
         if value <= 0:
             self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
+        self.name = None
         super(GroceryItem, self).__init__(**kwargs)
 
         # set None for counter label first for instantiation of count.
