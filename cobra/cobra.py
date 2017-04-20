@@ -23,7 +23,7 @@ Window.clearcolor = (1, 1, 1, 1)
 url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 # unique token used for authentication
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
-firebase = firebase.FirebaseApplication(url, token)
+firebase = firebase.FirebaseApplication(url, authentication=token)
 
 list_items = ['milk', 'apple', 'chocolate', 'soft drinks',
               'shrimp', 'steak', 'chicken', 'broccoli']
