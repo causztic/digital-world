@@ -60,41 +60,39 @@ class GroceryItem(RelativeLayout):
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
-# class KivyCamera(Image):
-#     def __init__(self, **kwargs):
-#         super(KivyCamera, self).__init__(**kwargs)
-#         self.camera = PiCamera(resolution =(320, 240), framerate = 30)
-#         self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
-#         self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
-#         time.sleep(0.1)
-#         Clock.schedule_interval(self.update, 1.0 / 30)
+class KivyCamera(Image):
+    def __init__(self, **kwargs):
+        super(KivyCamera, self).__init__(**kwargs)
+        self.camera = PiCamera(resolution =(320, 240), framerate = 30)
+        self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
+        self.texture = Texture.create((self.camera.resolution[0], self.camera.resolution[1]))
+        time.sleep(0.1)
+        Clock.schedule_interval(self.update, 1.0 / 30)
 
-#     def update(self, dt):
-#         self.camera.capture(self.rawCapture, format="bgr")
-#         # grab the raw NumPy array representing the image, then initialize the timestamp
-#         # and occupied/unoccupied text
-#         image = self.rawCapture.array
-#         # clear the stream in preparation for the next frame
-#         self.rawCapture.truncate(0)
-#         self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
-#         self.canvas.ask_update()
+    def update(self, dt):
+        self.camera.capture(self.rawCapture, format="bgr")
+        # grab the raw NumPy array representing the image, then initialize the timestamp
+        # and occupied/unoccupied text
+        image = self.rawCapture.array
+        # clear the stream in preparation for the next frame
+        self.rawCapture.truncate(0)
+        self.texture.blit_buffer(image.tostring(), colorfmt='bgr')
+        self.canvas.ask_update()
 
 
 class RawKivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
         super(RawKivyCamera, self).__init__(**kwargs)
         self.capture = capture
+        self.texture = Texture.create((800, 480))
+        self.texture.add_reload_observer(self.update)
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
         ret, frame = self.capture.read()
-        if self.texture is None:
-            self.texture = Texture.create((frame.shape[1], frame.shape[0]))
+
         if ret:
-            try:
-                self.buffer = frame.imageData
-            except AttributeError:
-                self.buffer = frame.tostring()
+            self.buffer = frame.tostring()
 
             self.texture.blit_buffer(self.buffer, colorfmt='bgr')
             self.canvas.ask_update()
