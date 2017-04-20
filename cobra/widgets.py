@@ -14,6 +14,7 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 import cv2
 
+import imutils
 import time
 import numpy as np
 
