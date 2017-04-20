@@ -171,8 +171,8 @@ class RawKivyCamera(Image):
         Afterwards, matches the scanned lines to the available choices and adds them to the item count.
     """
 
-    def analyze_photo(self, instance):
-        print root
+    def analyze_photo(self, instance, screen):
+        print screen.manager.get_screen()
         if self.frame is not None:
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)

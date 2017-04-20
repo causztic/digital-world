@@ -13,6 +13,7 @@ from kivy.clock import Clock
 
 import os
 import cv2
+from functools import partial
 from widgets import GroceryItem, RawKivyCamera
 
 # load the video driver
@@ -109,7 +110,7 @@ class CameraScreen(Screen):
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.camera = RawKivyCamera(self.capture, 30)
         self.take_photo_button = Button(
-            text="Analyze Receipt", on_press=self.camera.analyze_photo)
+            text="Analyze Receipt", on_press=partial(self.camera.analyze_photo, self))
 
         bottom.add_widget(self.camera)
         bottom.add_widget(self.take_photo_button)
@@ -133,8 +134,6 @@ class CameraScreen(Screen):
 class CobraApp(App):
 
     def build(self):
-        global root
-        root = self.root
         sm = ScreenManager()
         self.i_s = InventoryScreen(name='Inventory')
         self.c_s = CameraScreen(name="Camera")
