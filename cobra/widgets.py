@@ -34,9 +34,11 @@ class GroceryItem(RelativeLayout):
 
     @count.setter
     def count(self, count):
-        self._count = count
-        if self.counter is not None:
-            self.counter.text = str(self.count)
+        # validate to not allow it to go to negative.
+        if type(count) == int and count >= 0:
+            self._count = count
+            if self.counter is not None:
+                self.counter.text = str(self.count)
 
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
@@ -71,12 +73,12 @@ class GroceryItem(RelativeLayout):
         remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
-        self.count += 1
+        self.count(self.count+1)
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 
     def decrement(self,instance):
-        self.count -= 1
+        self.count(self.count-1)
         self.counter.text = str(self.count)
         firebase.put('/',self.name,self.counter.text)
 

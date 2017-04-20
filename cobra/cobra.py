@@ -24,9 +24,11 @@ url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
 firebase = firebase.FirebaseApplication(url, token)
 
+# set a list of currently available groceries
 groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft drinks': 0,
              'shrimp': 0, 'steak': 0, 'chicken': 0, 'broccoli': 0}
 
+# set default window size to suit the Pi
 Window.size = (800, 480)
 
 
@@ -57,24 +59,27 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
 
         self.bind(on_pre_enter=self.update_from_server)
-        
+
         scroller = ScrollView(size=(800, 370))
         scroller.add_widget(self.inventory)
         self.bottom_layout.add_widget(scroller)
-        
+
         self.add_widget(self.overall_layout)
 
-    def update_from_server(self, *args):
+    def update_from_server(self):
+        """ Pull the data from the server and call the updating as a separate process """
         self.empty_label.text = "Loading items!"
         Clock.schedule_once(self.update_groceries, 1)
 
-    def update_groceries(self, *args):
-        self.overall_layout.clear_widgets() # clear widgets and add again on enter to refresh
-        # clear groceries as well to re-add
+    def update_groceries(self):
+        """ Update the groceries according to Firebase. """
+        # clear items to reset the addition of widgets
+        self.overall_layout.clear_widgets() 
         self.inventory.clear_widgets()
         self.overall_layout.add_widget(self.topbox)
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated (used for testing) and display them.
+        print firebase.get('/')
         for item, count in firebase.get('/').iteritems():
             # check if item is enabled in the application
             if groceries.has_key(item):
