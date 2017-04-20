@@ -36,7 +36,7 @@ class ButtonWithImage(RelativeLayout):
         self.img = Image(source=logo, size=size)
         self.button = Button(size=self.size)
         self.button.bind(on_press = on_press)
-        self.label = Label(text=text, pos=self.button.center)
+        self.label = Label(text=text, pos=(self.center_x + 150, self.center_y - 50), font_size=40)
         self.button.add_widget(self.img)
         self.button.add_widget(self.label)
         self.add_widget(self.button)

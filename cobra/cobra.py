@@ -123,15 +123,14 @@ class CameraScreen(Screen):
         resolution = (800, 480)
         overall_layout = GridLayout(cols=2, size=resolution, size_hint=(1, None))
         right = BoxLayout(orientation="vertical")
-        inventory = Button(text="Change to Inventory",
-                           on_press=self.changeScreen)
+        inventory = ButtonWithImage(logo="assets/fridge.png", text="Back to Fridge", on_press=self.changeScreen)
 
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.camera = RawKivyCamera(self.capture, 30)
-        self.take_photo_button = Button(
-            text="Analyze Receipt", on_press=partial(self.camera.analyze_photo, self))
+
+        self.take_photo_button = ButtonWithImage(logo="assets/analysis.png", text="Analyze Receipt", on_press=partial(self.camera.analyze_photo, self))
 
         overall_layout.add_widget(self.camera)
         right.add_widget(inventory)
