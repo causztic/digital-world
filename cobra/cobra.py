@@ -26,7 +26,7 @@ url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
 firebase = firebase.FirebaseApplication(url, token)
 
-groceries = {'milk': 1, 'apple': 0, 'chocolate': 1, 'soft drinks': 3,
+groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft drinks': 0,
              'shrimp': 0, 'steak': 0, 'chicken': 0, 'broccoli': 0}
 
 Window.size = (800, 480)
@@ -51,9 +51,8 @@ class InventoryScreen(Screen):
         # instantiate GroceryItems with default values.
         for key, value in groceries.iteritems():
             self.grocery_widgets[key] = GroceryItem(name=key, count=value)
-            
+
         self.empty_label = Label(text="", color=(0, 0, 0, 1), font_size=60)
-        self.update_from_server()
 
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
