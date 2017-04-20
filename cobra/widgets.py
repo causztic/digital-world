@@ -8,6 +8,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.stacklayout import StackLayout
 
 from kivy.properties import StringProperty
 from kivy.clock import Clock
@@ -28,6 +29,14 @@ from fuzzywuzzy import process
 url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
 firebase = firebase.FirebaseApplication(url, token)
+
+class ButtonWithImage(Button):
+    def __init__(self, logo, text, width = 150, **kwargs):
+        super(ButtonWithImage, self).__init__(**kwargs)
+        stack = StackLayout(pos = self.parent.pos, size = self.parent.size, orientation = 'lr-tb')
+        stack.add_widget(Image(source=logo, size_hint_x = None, width = width))
+        stack.add_widget(Label(size_hint_x = None, width = 100, text = text))
+        self.add_widget(stack)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
 class GroceryItem(RelativeLayout):

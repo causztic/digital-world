@@ -9,7 +9,9 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
+
 from kivy.core.window import Window
+
 
 from kivy.clock import Clock
 
@@ -20,7 +22,7 @@ from firebase import firebase
 from functools import partial
 
 # custom imports
-from widgets import GroceryItem, RawKivyCamera
+from widgets import GroceryItem, RawKivyCamera, ButtonWithImage
 
 # load the video driver
 os.system('sudo modprobe bcm2835-v4l2')
@@ -37,7 +39,6 @@ groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft drinks': 0,
 # set default window size to suit the Pi
 Window.size = (800, 480)
 
-
 class InventoryScreen(Screen):
     """
         The Inventory Screen keeps track of the items in the fridge,
@@ -51,7 +52,7 @@ class InventoryScreen(Screen):
         self.topbox = BoxLayout(orientation='horizontal',
                                 height=100, size_hint=(1, None))
         label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
-        camera = Button(on_press=self.changeScreen, text="Scan Receipt")
+        camera = ButtonWithImage(logo="assets/camera.png", text="Scan Receipt", on_press=self.changeScreen)
         self.topbox.add_widget(label)
         self.topbox.add_widget(camera)
 
