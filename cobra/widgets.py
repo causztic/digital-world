@@ -91,7 +91,7 @@ class GroceryItem(RelativeLayout):
         self.image.size_hint = (None,None)
         self.add_widget(self.image)
 
-        add_button.bind(on_press = self.increment)
+        self.add_button.bind(on_press = self.increment)
         self.remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
