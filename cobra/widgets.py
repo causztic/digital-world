@@ -83,7 +83,10 @@ class RawKivyCamera(Image):
         pass
 
     def detect_shapes(self, frame):
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        resized = imutils.resize(frame, width=300)
+        ratio = image.shape[0] / float(resized.shape[0])
+
+        gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
         # find contours in the thresholded image and initialize the
@@ -96,16 +99,16 @@ class RawKivyCamera(Image):
             # compute the center of the contour, then detect the name of the
             # shape using only the contour
             M = cv2.moments(c)
-            cX = int((M["m10"] / (M["m00"] or 1)))
-            cY = int((M["m01"] / (M["m00"] or 1)))
+            cX = int((M["m10"] / M["m00"] * ratio))
+            cY = int((M["m01"] / M["m00"] * ratio))
             shape = sd.detect(c)
         
             # Draw the contours and the name of the shape on the image
             c = c.astype("float")
             c = c.astype("int")
             cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
-            cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                0.5, (255, 255, 255), 2)
+            # cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+            #     0.5, (255, 255, 255), 2)
             
             return frame
 
