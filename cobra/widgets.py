@@ -99,3 +99,6 @@ class RawKivyCamera(Image):
             self.texture.blit_buffer(self.buffer, colorfmt='bgr')
             self.canvas.ask_update()
             self.buffer = None
+
+    def analyze_photo(self, instance):
+        pass
