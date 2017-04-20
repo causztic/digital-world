@@ -77,7 +77,7 @@ class CameraScreen(Screen):
             orientation='vertical', size=resolution, size_hint=(1, None))
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
-        label = Label(text='Camera', color=(0, 0, 0, 1), font_size=60)
+        label = Image(size=(150,150), source="assets/camera.png")
         inventory = Button(text="Change to Inventory",
                            on_press=self.changeScreen)
 
