@@ -57,7 +57,7 @@ class InventoryScreen(Screen):
     def update_from_server(self, *args):
         Clock.schedule_once(self.update_groceries, 0.5)
 
-    def update_groceries(self):
+    def update_groceries(self, *args):
         show_empty = True
         for item, count in firebase.get('/').iteritems():
             if int(count) != 0:
