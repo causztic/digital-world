@@ -45,6 +45,9 @@ class InventoryScreen(Screen):
         topbox.add_widget(camera)
 
         self.grocery_widgets = {}
+        for key, value in groceries.iteritems():
+            # iterate and store it in an attribute
+            self.grocery_widgets[key] = GroceryItem(name=key, count=value)
 
         self.overall_layout.add_widget(topbox)
         self.bottom_layout = BoxLayout(orientation='horizontal')
@@ -61,15 +64,10 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         show_empty = True
-
-        for key, value in groceries.iteritems():
-            # iterate and store it in a glboal variable
-            self.grocery_widgets[key] = GroceryItem(name=key, count=value)
-
         # add the grocery item to the "fridge" if it exists on Firebase
         for item, count in firebase.get('/').iteritems():
             if int(count) != 0:
-                # get the relevant GroceryItem
+                # get the relevant GroceryItem and update the data
                 self.grocery_widgets[item].count = count
                 show_empty = False
                 self.inventory.add_widget(self.grocery_widgets[item])
