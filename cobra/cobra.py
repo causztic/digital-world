@@ -25,8 +25,9 @@ url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
 firebase = firebase.FirebaseApplication(url, token)
 
-list_items = ['milk', 'apple', 'chocolate', 'soft drinks',
-              'shrimp', 'steak', 'chicken', 'broccoli']
+groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft_drinks': 0,
+             'shrimp': 0, 'steak': 0, 'chicken': 0, 'broccoli': 0}
+
 Window.size = (800, 480)
 
 
@@ -43,6 +44,8 @@ class InventoryScreen(Screen):
         topbox.add_widget(label)
         topbox.add_widget(camera)
 
+        self.grocery_widgets = {}
+
         self.overall_layout.add_widget(topbox)
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
@@ -58,10 +61,18 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         show_empty = True
+
+        for key, value in groceries.iteritems():
+            # iterate and store it in a glboal variable
+            self.grocery_widgets[key] = GroceryItem(name=key, count=value)
+
+        # add the grocery item to the "fridge" if it exists on Firebase
         for item, count in firebase.get('/').iteritems():
             if int(count) != 0:
+                # get the relevant GroceryItem
+                self.grocery_widgets[item].count = count
                 show_empty = False
-                self.inventory.add_widget(GroceryItem(name=item, count=count))
+                self.inventory.add_widget(self.grocery_widgets[item])
 
         if show_empty:
             self.empty_label.text = "Your Fridge is empty :("
@@ -86,7 +97,7 @@ class CameraScreen(Screen):
             orientation='vertical', size=resolution, size_hint=(1, None))
         topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
-        label = Image(size=(150,150), source="assets/camera.png")
+        label = Image(size=(150, 150), source="assets/camera.png")
         inventory = Button(text="Change to Inventory",
                            on_press=self.changeScreen)
 
@@ -116,9 +127,10 @@ class CameraScreen(Screen):
 
     def start_cam(self, *args):
         self.camera.play = True
-    
+
     def stop_cam(self, *args):
         self.camera.play = False
+
 
 class CobraApp(App):
 
