@@ -34,8 +34,8 @@ class GroceryItem(RelativeLayout):
 
     @name.setter
     def name(self, value):
+        self._name = value
         if value is not None:
-            self._name = value
             self.image.source = "assets/" + self._name + ".png"
 
     @property
