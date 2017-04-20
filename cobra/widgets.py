@@ -36,8 +36,8 @@ class ButtonWithImage(RelativeLayout):
         img = Image(source=logo, size=size)
         self.button = Button(size=self.size)
         self.label = Label(text=text)
-        img.add_widget(button)
-        img.add_widget(label)
+        img.add_widget(self.button)
+        img.add_widget(self.label)
         self.add_widget(img)
 
 """ Base GroceryItem Widget to show the items in the fridge."""
