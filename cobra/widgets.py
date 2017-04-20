@@ -40,7 +40,7 @@ class ButtonWithImage(RelativeLayout):
         self.button = Button(size=self.size)
         self.button.bind(on_press=on_press)
         self.button.add_widget(self.img)
-        
+
         # if it's not a full image, add a label.
         # otherwise set the image to the size and set as is.
         if not full:
@@ -270,7 +270,8 @@ class RawKivyCamera(Image):
             print txt
             instance.text = "Analyze Receipt"
             choices = {"milk": ["HL", "Milk"], "chocolate": ["Crunchie", "Hershey"], "apple": [
-                "Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"]}
+                "Apple", "Fuji Apple"], "broccoli": ["Broccoli"],  "chicken": ["Chicken"], "soft drinks": ["Coca-Cola"], "steak": ["Steak"],
+                "shrimp": ["Shrimp", "Prawn"]}
             all_values = [item for sublist in choices.values()
                           for item in sublist]
             for line in txt.split("\n"):
