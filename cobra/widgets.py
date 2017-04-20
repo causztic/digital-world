@@ -172,7 +172,6 @@ class RawKivyCamera(Image):
     """
 
     def analyze_photo(self, screen, instance):
-        print screen.manager.get_screen()
         if self.frame is not None:
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -187,5 +186,9 @@ class RawKivyCamera(Image):
                     if match[1] > 50:
                         for k, v in choices.iteritems():
                             if match[0] in v:
+                                # add the count to the inventory
+                                c = screen.manager.get_screen("Inventory").grocery_widgets[item].count
+                                screen.manager.get_screen("Inventory").grocery_widgets[item].count += 1
+                                firebase.put('/',item, str(c + 1))
                                 print "%s matches %s" % (line, k)
                                 break

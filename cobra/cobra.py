@@ -65,6 +65,7 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         show_empty = True
+        self.inventory.clear_widgets()
         # add the grocery item to the "fridge" if it exists on Firebase
         for item, count in firebase.get('/').iteritems():
             if int(count) != 0:
