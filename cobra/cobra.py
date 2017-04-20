@@ -41,28 +41,33 @@ class InventoryScreen(Screen):
         camera = Button(text="Scan Receipt", on_press=self.changeScreen)
         topbox.add_widget(label)
         topbox.add_widget(camera)
-        overall_layout.add_widget(topbox)
-        bottom_layout = BoxLayout(orientation='horizontal')
-        inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
-            None, None), padding=30, size=(800, 380))
 
+        self.overall_layout.add_widget(topbox)
+        self.bottom_layout = BoxLayout(orientation='horizontal')
+        self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
+            None, None), padding=30, size=(800, 380))
+        self.empty_label = Label(text="Loading items!", color=(0, 0, 0, 1), font_size=60)
+        self.overall_layout.add_widget(self.empty_label)
+        self.bind(on_pre_enter=self.update_from_server)
+        self.add_widget(self.overall_layout)
+
+
+    def update_from_server(self, *args):
         show_empty = True
         for item, count in firebase.get('/').iteritems():
             if int(count) != 0:
                 show_empty = False
-                inventory.add_widget(GroceryItem(name=item, count=count))
+                self.inventory.add_widget(GroceryItem(name=item, count=count))
 
         if show_empty:
-            overall_layout.add_widget(
-                Label(text="Your fridge is empty.. :(", color=(0, 0, 0, 1), font_size=60))
+            self.empty_label.text = "Your Fridge is empty :("
         else:
-            inventory.height = inventory.minimum_height + 750
+            self.inventory.height = self.inventory.minimum_height + 750
             scroller = ScrollView(size=(800, 370))
-            scroller.add_widget(inventory)
-            bottom_layout.add_widget(scroller)
-            overall_layout.add_widget(bottom_layout)
+            scroller.add_widget(self.inventory)
+            self.bottom_layout.add_widget(scroller)
+            self.overall_layout.add_widget(self.bottom_layout)
 
-        self.add_widget(overall_layout)
 
     def changeScreen(self, *args):
         self.manager.current = "Camera"
