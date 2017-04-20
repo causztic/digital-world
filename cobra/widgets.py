@@ -35,22 +35,23 @@ class GroceryItem(RelativeLayout):
     @count.setter
     def set_count(self, count):
         self._count = count
-        self.counter.text = str(self.count)
+        if self.counter is not None:
+            self.counter.text = str(self.count)
 
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
 
-        # instantiate counter_label before setting count
-        image = Image(size=(150,150), source="assets/" + self.name+".png")
-        counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(image.center_x-65, image.center_y-87.5))
-        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
-        
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
         for k in kwargs.keys():
             if k in acceptable_keys_list:
                 self.__setattr__(k, kwargs[k])
         # self.source = self.name+".png"
         # self.size = (150,150)
+
+        image = Image(size=(150,150), source="assets/" + self.name+".png")
+        counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(image.center_x-65, image.center_y-87.5))
+        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
+        
         add_button = Button(size=(25,25), pos=(image.center_x+50, image.center_y), text="+")
         plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
         add_button.add_widget(plus_sign)
