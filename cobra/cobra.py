@@ -9,10 +9,10 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
 from kivy.core.window import Window
-from widgets import GroceryItem
-from PIL import Image as img
 
-from camera import Camera as CustomCamera
+import cv2
+from widgets import GroceryItem, RawKivyCamera
+
 
 Window.clearcolor = (1, 1, 1, 1)
 
@@ -83,7 +83,8 @@ class CameraScreen(Screen):
         overall_layout.add_widget(topbox)
 
         bottom = BoxLayout(orientation="horizontal")
-        self.camera = CustomCamera(resolution=(320, 240))
+        self.capture = cv2.VideoCapture(0)
+        self.camera = RawKivyCamera(self.capture, 30)
         self.take_photo_button = Button(
             text="Analyze Receipt", on_press=self.camera.analyze_photo)
 
@@ -112,8 +113,7 @@ class CobraApp(App):
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
-        # self.c_s.capture.release()
-        pass
+        self.c_s.capture.release()
 
 if __name__ == '__main__':
     CobraApp().run()
