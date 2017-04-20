@@ -49,10 +49,10 @@ class GroceryItem(RelativeLayout):
         if value >= 0:
             self._count = value
             self.counter.text = str(self._count)
-            self.remove_button.opacity = 1
             if self.name is not None:
                 firebase.put('/', self.name, self.counter.text)
-
+            self.remove_button.opacity = 1
+            self.remove_button.disabled = False
         # set the button to be invisible if it is zero or lesser
         if value <= 0:
             self.remove_button.opacity = 0
@@ -89,9 +89,13 @@ class GroceryItem(RelativeLayout):
         self.remove_button.bind(on_press = self.decrement)
 
     def increment(self,instance):
+        self.remove_button.opacity = 0.5
+        self.remove_button.disabled = True
         self.count = self.count + 1
 
     def decrement(self,instance):
+        self.remove_button.opacity = 0.5
+        self.remove_button.disabled = True
         self.count = self.count - 1
 
 
