@@ -39,9 +39,11 @@ class GroceryItem(RelativeLayout):
             self._count = value
             if self.counter is not None:
                 self.counter.text = str(self.count)
-            self.remove_button.opacity = 1
+            if self.remove_button:
+                self.remove_button.opacity = 1
         else:
-            self.remove_button.opacity = 0
+            if self.remove_button:
+                self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
