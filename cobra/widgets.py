@@ -218,7 +218,6 @@ class RawKivyCamera(Image):
     """
 
     def analyze_photo(self, screen, instance):
-        instance.disabled = True
         instance.text = "Analyzing.."
         if self.frame is not None:
             # convert the image to grayscale and add a threshold to it to increase the word contrast.
