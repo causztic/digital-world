@@ -26,7 +26,7 @@ url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
 firebase = firebase.FirebaseApplication(url, token)
 
-groceries = {'milk': 1, 'apple': 0, 'chocolate': 1, 'soft_drinks': 3,
+groceries = {'milk': 1, 'apple': 0, 'chocolate': 1, 'soft drinks': 3,
              'shrimp': 0, 'steak': 0, 'chicken': 0, 'broccoli': 0}
 
 Window.size = (800, 480)
@@ -65,6 +65,8 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         self.overall_layout.clear_widgets() # clear widgets and add again on enter to refresh
+        # clear groceries as well to re-add
+        self.inventory.clear_widgets()
         self.overall_layout.add_widget(self.topbox)
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated (used for testing) and display them.
@@ -84,7 +86,7 @@ class InventoryScreen(Screen):
         else:
             # dynamically set the height of the gridlayout based 
             # on the number of stuff in the inventory to prevent clipping
-            self.inventory.height = 250 * len(self.inventory.children) / 3
+            self.inventory.height = 300 * len(self.inventory.children) / 3
             scroller = ScrollView(size=(800, 370))
             scroller.add_widget(self.inventory)
             self.bottom_layout.add_widget(scroller)
