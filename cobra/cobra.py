@@ -48,11 +48,8 @@ class InventoryScreen(Screen):
         self.grocery_widgets = {}
         self.show_empty = True
 
-        # instantiate GroceryItems with default values. Show them if more than 0.
+        # instantiate GroceryItems with default values.
         for key, value in groceries.iteritems():
-            if value > 0:
-                self.show_empty = False
-            # iterate and store it in an attribute
             self.grocery_widgets[key] = GroceryItem(name=key, count=value)
 
         self.overall_layout.add_widget(topbox)
@@ -71,8 +68,9 @@ class InventoryScreen(Screen):
     def update_groceries(self, *args):
         self.inventory.clear_widgets()
         # add the grocery item to the "fridge" if it exists on Firebase
+        # add the updated value from firebase + default values instantiated (used for testing) and display them.
         for item, count in firebase.get('/').iteritems():
-            if int(count) != 0:
+            if (int(count) + groceries[item]) != 0:
                 # get the relevant GroceryItem and update the data
                 self.grocery_widgets[item].count = count
                 self.show_empty = False
