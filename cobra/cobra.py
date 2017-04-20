@@ -55,9 +55,10 @@ class InventoryScreen(Screen):
         self.add_widget(self.overall_layout)
 
     def update_from_server(self, *args):
-        firebase.get_('/', None, callback=self.update_groceries)
+        firebase.get_async('/', None, callback=self.update_groceries)
 
     def update_groceries(self, response):
+        print response
         show_empty = True
         for item, count in response.iteritems():
             if int(count) != 0:
