@@ -47,13 +47,14 @@ class InventoryScreen(Screen):
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
             None, None), padding=30, size=(800, 380))
-        self.empty_label = Label(text="Loading items!", color=(0, 0, 0, 1), font_size=60)
+        self.empty_label = Label(text="", color=(0, 0, 0, 1), font_size=60)
         self.overall_layout.add_widget(self.empty_label)
         self.bind(on_pre_enter=self.update_from_server)
         self.add_widget(self.overall_layout)
 
     def update_from_server(self, *args):
-        Clock.schedule_once(self.update_groceries, 0.5)
+        self.empty_label.text = "Loading items!"
+        Clock.schedule_once(self.update_groceries, 1)
 
     def update_groceries(self, *args):
         show_empty = True
