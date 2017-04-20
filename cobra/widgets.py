@@ -57,7 +57,7 @@ class GroceryItem(RelativeLayout):
         # set None for counter label first for instantiation of count.
         self.image = Image(size=(150,150))
         counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(self.image.center_x-65, self.image.center_y-87.5))
-        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),text=str(self.count),font_size = 30, color=(1,1,1,1))
+        self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),font_size = 30, color=(1,1,1,1))
 
         add_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y), text="+")
         plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
