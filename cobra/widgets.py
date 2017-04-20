@@ -69,7 +69,7 @@ class RawKivyCamera(Image):
         super(RawKivyCamera, self).__init__(**kwargs)
         self.capture = capture
         self.play = play
-        self.th = None
+        self.rgb = None
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
@@ -81,18 +81,13 @@ class RawKivyCamera(Image):
                 # convert the resized image to grayscale, blur it slightly,
                 # and threshold it
                 self.buffer = frame
-                self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
-                self.th = self.outline(frame)
+                self.rgb = cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB)
+                self.texture.blit_buffer(rgb.tostring(), colorfmt='rgb', bufferfmt='ubyte')
                 self.canvas.ask_update()
                 self.buffer = None
 
     def analyze_photo(self, instance):
         cv2.imwrite("test.png", self.buffer)
-        if self.th is not None:
-            txt = pytesseract.image_to_string(pil_image.fromarray(self.th))
+        if self.rgb is not None:
+            txt = pytesseract.image_to_string(pil_image.fromarray(cv2.flip(cv2.flip(self.rgb, 0), 1)))
             print txt
-
-    def outline(self, frame):
-        gray = cv2.cvtColor(cv2.flip(cv2.flip(frame, 0), 1), cv2.COLOR_BGR2GRAY)
-        #th = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
-        return gray
