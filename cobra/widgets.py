@@ -1,25 +1,29 @@
-from firebase import firebase
+# kivy library imports
 from kivy.uix.widget import Widget
 from kivy.uix.image  import Image
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
-from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 
+from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-from PIL import Image as pil_image
-from fuzzywuzzy import process
+
+# python library imports
 
 import cv2
 import imutils
 import time
 import pytesseract
 import numpy as np
+
+from firebase import firebase
+from PIL import Image as pil_image
+from fuzzywuzzy import process
 
 url = "https://rasbpi-9b253.firebaseio.com/" # URL to Firebase database
 token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC" # unique token used for authentication
@@ -56,6 +60,7 @@ class GroceryItem(RelativeLayout):
                 self.remove_button.disabled = False
                 self.add_button.opacity = 1
                 self.remove_button.opacity = 1
+
         # set the button to be invisible if it is zero or lesser
         if value <= 0:
             self.add_button.disabled = False
@@ -67,7 +72,7 @@ class GroceryItem(RelativeLayout):
         self.name = None
         super(GroceryItem, self).__init__(**kwargs)
 
-        # set None for counter label first for instantiation of count.
+        # set the relative layouts of the add and remove button around the image.
         self.image = Image(size=(150,150))
         counter_backgrnd = Image (size=(50,50),source = 'assets/label.png',pos =(self.image.center_x-65, self.image.center_y-87.5))
         self.counter = Label(size=(20,20),pos=(counter_backgrnd.center_x-10, counter_backgrnd.center_y-9),font_size = 30, color=(1,1,1,1))
@@ -145,8 +150,8 @@ class ShapeDetector(object):
 		return shape
 
 """
-    Custom Camera class instead of using Kivy Camera because Kivy Camera has a memory leak on Raspberry Pi,
-    in addition to exposing the matrix to perform operations on the image frame.
+    Created our own custom camera class instead of using Kivy Camera because Kivy Camera has a memory leak on Raspberry Pi.
+    In addition, we can make use of the exposed image matrix to perform operations on the image frame.
 """
 
 class RawKivyCamera(Image):
