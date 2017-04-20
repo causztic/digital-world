@@ -13,7 +13,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from PIL import Image as pil_image
-
+from fuzzywuzzy import process
 
 import cv2
 import imutils
@@ -155,8 +155,22 @@ class RawKivyCamera(Image):
 
     
     def analyze_photo(self, instance):
+        instance.text = "Processing.."
+        instance.disabled = True
         if self.frame is not None:
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
             txt = pytesseract.image_to_string(pil_image.fromarray(bw_img))
-            print txt
+            choices = { milk: ["HL", "Milk"], 
+                        chocolate: ["Crunchie", "Hershey"], 
+                        apple: ["Apple", "Fuji Apple"],
+                        broccoli: ["Broccoli"], 
+                        chicken: ["Chicken"], 
+                        cola: ["Coca-Cola"] }
+            for line in txt:
+                all_values = [item for sublist in choices.values for item in sublist]
+                value, score = process.extractOne(line, all_values)
+                for k, v in choices.iteritems():
+                    if value in v:
+                        print "%s matches %s" % (line, k)
+                        break
