@@ -38,12 +38,12 @@ class InventoryScreen(Screen):
         super(InventoryScreen, self).__init__(**kwargs)
         self.overall_layout = BoxLayout(
             orientation='vertical', size=(800, 480), size_hint=(1, None))
-        topbox = BoxLayout(orientation='horizontal',
+        self.topbox = BoxLayout(orientation='horizontal',
                            height=100, size_hint=(1, None))
         label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
         camera = Button(text="Scan Receipt", on_press=self.changeScreen)
-        topbox.add_widget(label)
-        topbox.add_widget(camera)
+        self.topbox.add_widget(label)
+        self.topbox.add_widget(camera)
 
         self.grocery_widgets = {}
         self.show_empty = True
@@ -52,12 +52,10 @@ class InventoryScreen(Screen):
         for key, value in groceries.iteritems():
             self.grocery_widgets[key] = GroceryItem(name=key, count=value)
 
-        self.overall_layout.add_widget(topbox)
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
             None, None), padding=30, size=(800, 380))
         self.empty_label = Label(text="", color=(0, 0, 0, 1), font_size=60)
-        self.overall_layout.add_widget(self.empty_label)
         self.bind(on_pre_enter=self.update_from_server)
         self.add_widget(self.overall_layout)
 
@@ -66,23 +64,27 @@ class InventoryScreen(Screen):
         Clock.schedule_once(self.update_groceries, 1)
 
     def update_groceries(self, *args):
-        self.inventory.clear_widgets()
+        self.overall_layout.clear_widgets() # clear widgets and add again on enter to refresh
+        self.overall_layout.add_widget(self.topbox)
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated (used for testing) and display them.
         for item, count in firebase.get('/').iteritems():
             # check if item is enabled in the application
             if groceries.has_key(item):
-                if (int(count) + groceries[item]) != 0:
-                    # get the relevant GroceryItem and update the data
-                    self.grocery_widgets[item].count = count
+                total = int(count) + groceries[item]
+                if (total) > 0:
                     self.show_empty = False
+                    # get the relevant GroceryItem and update the data
+                    self.grocery_widgets[item].count = total
                     self.inventory.add_widget(self.grocery_widgets[item])
 
         if self.show_empty:
             self.empty_label.text = "Your Fridge is empty :("
+            self.overall_layout.add_widget(self.empty_label)
         else:
-            self.overall_layout.remove_widget(self.empty_label)
-            self.inventory.height = self.inventory.minimum_height + 750
+            # dynamically set the height of the gridlayout based 
+            # on the number of stuff in the inventory to prevent clipping
+            self.inventory.height = 250 * len(self.inventory.children) / 3
             scroller = ScrollView(size=(800, 370))
             scroller.add_widget(self.inventory)
             self.bottom_layout.add_widget(scroller)
