@@ -63,7 +63,7 @@ class GroceryItem(RelativeLayout):
         plus_sign = Image(size = (50,50),pos = (add_button.center_x-25,add_button.center_y-25),source = 'assets/plus.png')
         add_button.add_widget(plus_sign)
         self.remove_button = Button(size=(25,25), pos=(self.image.center_x+50, self.image.center_y-75), text="-")
-        minus_sign = Image(size = (50,50),pos = (remove_button.center_x-25,remove_button.center_y-25),source = 'assets/minus.png')
+        minus_sign = Image(size = (50,50),pos = (self.remove_button.center_x-25,self.remove_button.center_y-25),source = 'assets/minus.png')
         self.remove_button.add_widget(minus_sign)
 
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
