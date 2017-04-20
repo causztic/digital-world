@@ -96,8 +96,8 @@ class RawKivyCamera(Image):
             # compute the center of the contour, then detect the name of the
             # shape using only the contour
             M = cv2.moments(c)
-            cX = int((M["m10"] / M["m00"]))
-            cY = int((M["m01"] / M["m00"]))
+            cX = int((M["m10"] / (M["m00"] or 1)))
+            cY = int((M["m01"] / (M["m00"] or 1)))
             shape = sd.detect(c)
         
             # Draw the contours and the name of the shape on the image
