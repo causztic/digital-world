@@ -44,11 +44,15 @@ class GroceryItem(RelativeLayout):
     @count.setter
     def count(self, value):
         # validate to not allow it to go to negative.
+        # update the server if it's non-negative.
         if value >= 0:
             self._count = value
             self.counter.text = str(self._count)
             self.remove_button.opacity = 1
-        else:
+            firebase.put('/',self.name,self.counter.text)
+        
+        # set the button to be invisible if it is zero or lesser
+        if value <= 0:
             self.remove_button.opacity = 0
 
     def __init__(self, **kwargs):
@@ -83,13 +87,9 @@ class GroceryItem(RelativeLayout):
 
     def increment(self,instance):
         self.count = self.count + 1
-        self.counter.text = str(self.count)
-        firebase.put('/',self.name,self.counter.text)
 
     def decrement(self,instance):
         self.count = self.count - 1
-        self.counter.text = str(self.count)
-        firebase.put('/',self.name,self.counter.text)
 
 
 """
