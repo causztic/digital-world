@@ -172,6 +172,7 @@ class RawKivyCamera(Image):
     """
 
     def analyze_photo(self, instance):
+        print instance.root
         if self.frame is not None:
             gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             (thresh, bw_img) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
