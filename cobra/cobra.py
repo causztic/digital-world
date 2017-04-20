@@ -1,4 +1,4 @@
-from firebase import firebase
+from firebase import FirebaseApplication, FirebaseAuthentication
 from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
@@ -20,11 +20,11 @@ os.system('sudo modprobe bcm2835-v4l2')
 
 Window.clearcolor = (1, 1, 1, 1)
 
-url = "https://rasbpi-9b253.firebaseio.com/"  # URL to Firebase database
+url = "https://cobra-e6070.firebaseio.com/"  # URL to Firebase database
 # unique token used for authentication
-token = "tlXOUKslj8JwDSc1ymJ1lbh8n2tkfUIZb5090xlC"
+secret = "QpjR4A6r1u5OVBaEipGTxG2ZivMgb23iJ6h280DI"
 
-firebase = firebase.FirebaseApplication(url, token)
+firebase = FirebaseApplication(url, FirebaseAuthentication(secret, True, True))
 
 list_items = ['milk', 'apple', 'chocolate', 'soft drinks',
               'shrimp', 'steak', 'chicken', 'broccoli']
@@ -58,7 +58,7 @@ class InventoryScreen(Screen):
 
     def update_groceries(self, *args):
         show_empty = True
-        for item, count in firebase.get('/').iteritems():
+        for item, count in firebase.get('/', None).iteritems():
             if int(count) != 0:
                 show_empty = False
                 self.inventory.add_widget(GroceryItem(name=item, count=count))
