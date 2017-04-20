@@ -41,6 +41,9 @@ class GroceryItem(RelativeLayout):
     def __init__(self, **kwargs):
         super(GroceryItem, self).__init__(**kwargs)
 
+        # set None for counter label first for instantiation of count.
+        self.counter = None
+
         acceptable_keys_list = ["count", "label_text", "name", "brand"]
         for k in kwargs.keys():
             if k in acceptable_keys_list:
