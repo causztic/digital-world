@@ -85,5 +85,6 @@ class RawKivyCamera(Image):
         pass
 
     def outline(self, frame):
-        th = cv2.adaptiveThreshold(frame,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        th = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
         return th
