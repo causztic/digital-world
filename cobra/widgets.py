@@ -76,28 +76,14 @@ class RawKivyCamera(Image):
             if ret:
                 # convert the resized image to grayscale, blur it slightly,
                 # and threshold it
-                self.buffer = self.detect_shapes(frame)
-                self.texture.blit_buffer(cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB).tostring(), colorfmt='rgb', bufferfmt='ubyte')
+                self.buffer = self.outline(frame)
+                self.texture.blit_buffer(self.buffer.tostring(), colorfmt='rgb', bufferfmt='ubyte')
                 self.canvas.ask_update()
                 self.buffer = None
 
     def analyze_photo(self, instance):
         pass
 
-    def detect_shapes(self, frame):
-        gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-        edges = cv2.Canny(gray,50,150,apertureSize = 3)
-
-        lines = cv2.HoughLines(edges,1,np.pi/180,200)
-        for rho,theta in lines[0]:
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a*rho
-            y0 = b*rho
-            x1 = int(x0 + 1000*(-b))
-            y1 = int(y0 + 1000*(a))
-            x2 = int(x0 - 1000*(-b))
-            y2 = int(y0 - 1000*(a))
-
-            cv2.line(frame,(x1,y1),(x2,y2),(0,0,255),2)
-        return frame
+    def outline(self, frame):
+        th = cv2.adaptiveThreshold(frame,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+        return th
