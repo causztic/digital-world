@@ -82,7 +82,7 @@ class RawKivyCamera(Image):
                 # and threshold it
                 self.buffer = frame
                 self.rgb = cv2.cvtColor(self.buffer, cv2.COLOR_BGR2RGB)
-                self.texture.blit_buffer(rgb.tostring(), colorfmt='rgb', bufferfmt='ubyte')
+                self.texture.blit_buffer(self.rgb.tostring(), colorfmt='rgb', bufferfmt='ubyte')
                 self.canvas.ask_update()
                 self.buffer = None
 
