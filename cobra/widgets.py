@@ -219,6 +219,7 @@ class RawKivyCamera(Image):
 
     def analyze_photo(self, screen, instance):
         instance.text = "Analyzing.."
+        time.sleep(0.5)
         if self.frame is not None:
             # convert the image to grayscale and add a threshold to it to increase the word contrast.
             # this will increase the accuracy of the tesseract library.
