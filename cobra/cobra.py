@@ -63,7 +63,7 @@ class InventoryScreen(Screen):
         for key, value in groceries.iteritems():
             self.grocery_widgets[key] = GroceryItem(name=key, count=value)
 
-        self.empty_label = Label(text="", color=(0, 0, 0, 1), font_size=60)
+        self.empty_label = Label(text="Loading items..", color=(0, 0, 0, 1), font_size=60)
 
         self.bottom_layout = BoxLayout(orientation='horizontal')
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
@@ -93,9 +93,7 @@ class InventoryScreen(Screen):
 
     """ UPDATE FROM SERVER ON INITIALIZATION"""
     def update_from_server(self, *args):
-        """ Pull the data from the server and call the updating as a separate process """
-        self.empty_label.text = "Loading items!"
-        self.overall_layout.add_widget(self.empty_label, 1)
+        """ Pull the data from the server"""
         # show loading message while obtaining from firebase.
         # could make it read locally but kivy is clunky
         self.inventory.clear_widgets()
