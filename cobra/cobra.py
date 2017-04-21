@@ -39,6 +39,7 @@ groceries = {'milk': 0, 'apple': 0, 'chocolate': 0, 'soft drinks': 0,
 # set default window size to suit the Pi
 Window.size = (800, 480)
 
+
 class InventoryScreen(Screen):
     """
         The Inventory Screen keeps track of the items in the fridge,
@@ -51,8 +52,10 @@ class InventoryScreen(Screen):
             orientation='vertical', size=(800, 480), size_hint=(1, None))
         self.topbox = BoxLayout(orientation='horizontal',
                                 height=100, size_hint=(1, None))
-        label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60, font_name="assets/ailerons.otf")
-        camera = ButtonWithImage(logo="assets/camera.png", text="Scan Receipt", on_press=self.changeScreen)
+        label = Label(text='Inventory', color=(0, 0, 0, 1),
+                      font_size=60, font_name="assets/ailerons.otf")
+        camera = ButtonWithImage(
+            logo="assets/camera.png", text="Scan Receipt", on_press=self.changeScreen)
         self.topbox.add_widget(label)
         self.topbox.add_widget(camera)
 
@@ -79,27 +82,24 @@ class InventoryScreen(Screen):
         self.add_widget(self.overall_layout)
 
     """ UPDATE WIDGETS LOCALLY WHEN THE SCREEN IS ENTERED """
+
     def update_inventory(self, *args):
         """ updates the local inventory with the updated values from the receipt scanned """
-        self.inventory.clear_widgets()
+
+        # clear items to reset the addition of widgets
+        self.reset_layout()
         for widget in self.grocery_widgets.itervalues():
-            self.inventory.add_widget(widget)
+            if widget.count > 0:
+                self.show_empty = False
+                self.inventory.add_widget(widget)
+
+        self.update_inventory_canvas()
 
     """ UPDATE FROM SERVER ON INITIALIZATION"""
+
     def update_from_server(self, *args):
         """ Pull the data from the server and call the updating as a separate process """
-        self.empty_label.text = "Loading items!"
-        self.overall_layout.add_widget(self.empty_label, 1)
-        # show loading message while obtaining from firebase.
-        # could make it read locally but kivy is clunky
-        self.inventory.clear_widgets()
-        Clock.schedule_once(self.update_groceries, 1)
-
-    def update_groceries(self, *args):
-        """ Update the groceries according to Firebase. """
-        # clear items to reset the addition of widgets
-        self.overall_layout.clear_widgets()
-        self.overall_layout.add_widget(self.topbox)
+        self.reset_layout()
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated
         # (used for testing) and display them.
@@ -113,7 +113,19 @@ class InventoryScreen(Screen):
                     # get the relevant GroceryItem and update the data
                     self.grocery_widgets[item].count = total
                     self.inventory.add_widget(self.grocery_widgets[item])
-                    self.canvas.ask_update()
+
+        self.update_inventory_canvas()
+
+    def reset_layout(self, *args):
+        """ Reset the layout to update widgets """
+        self.empty_label.text = "Loading items!"
+        self.overall_layout.add_widget(self.empty_label, 1)
+        self.inventory.clear_widgets()
+        self.overall_layout.clear_widgets()
+        self.overall_layout.add_widget(self.topbox)
+
+    def update_inventory_canvas(self, *args):
+        """ Update canvas """
         if self.show_empty:
             self.empty_label.text = "Your Fridge is empty :("
             self.overall_layout.add_widget(self.empty_label)
@@ -122,7 +134,8 @@ class InventoryScreen(Screen):
             # on the number of stuff in the inventory to prevent clipping
             self.inventory.height = 300 * len(self.inventory.children) / 3
             self.overall_layout.add_widget(self.bottom_layout)
-
+        self.canvas.ask_update()
+    
     def changeScreen(self, *args):
         """ Changes the screen to CameraScreen. """
         self.manager.current = "Camera"
@@ -130,19 +143,23 @@ class InventoryScreen(Screen):
 
 class CameraScreen(Screen):
     """ Camera Screen which allows the user to scan a receipt to add it to the inventory. """
+
     def __init__(self, **kwargs):
         super(CameraScreen, self).__init__(**kwargs)
         resolution = (800, 480)
-        overall_layout = GridLayout(cols=2, size=resolution, size_hint=(1, None))
+        overall_layout = GridLayout(
+            cols=2, size=resolution, size_hint=(1, None))
         right = BoxLayout(orientation="vertical")
-        inventory = ButtonWithImage(logo="assets/fridge.png", on_press=self.changeScreen, size=(160, 240), full=True)
+        inventory = ButtonWithImage(
+            logo="assets/fridge.png", on_press=self.changeScreen, size=(160, 240), full=True)
 
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.camera = RawKivyCamera(self.capture, 30)
 
-        self.take_photo_button = ButtonWithImage(logo="assets/analysis.png", on_press=partial(self.camera.analyze_photo, self), size=(160, 240), full=True)
+        self.take_photo_button = ButtonWithImage(logo="assets/analysis.png", on_press=partial(
+            self.camera.analyze_photo, self), size=(160, 240), full=True)
 
         overall_layout.add_widget(self.camera)
         right.add_widget(inventory)
@@ -170,6 +187,7 @@ class CameraScreen(Screen):
 
 class CobraApp(App):
     """ Main App. Instantiates the two screens needed. """
+
     def build(self):
         sm = ScreenManager()
         self.i_s = InventoryScreen(name='Inventory')
