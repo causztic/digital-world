@@ -70,6 +70,8 @@ class InventoryScreen(Screen):
             None, None), padding=30, size=(800, 380))
 
         self.bind(on_pre_enter=self.update_inventory)
+        # this calls the inventory update twice which is not optimal on init, but will work optimally 
+        # on subsequent entries as it will only get the data locally.
         self.update_from_server()
 
         scroller = ScrollView(size=(800, 370))
@@ -121,6 +123,7 @@ class InventoryScreen(Screen):
         self.update_inventory_canvas()
 
     def update_inventory_canvas(self, *args):
+        """ Update canvas based on whether fridge is empty"""
         if self.show_empty:
             self.overall_layout.remove_widget(self.empty_label)
             self.empty_label.text = "Your Fridge is empty :("
