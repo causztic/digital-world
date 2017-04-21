@@ -118,6 +118,7 @@ class InventoryScreen(Screen):
 
     def update_inventory_canvas(self, *args):
         if self.show_empty:
+            self.overall_layout.remove_widget(self.empty_label)
             self.empty_label.text = "Your Fridge is empty :("
             self.overall_layout.add_widget(self.empty_label)
         else:
