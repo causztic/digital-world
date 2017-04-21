@@ -289,7 +289,6 @@ class RawKivyCamera(Image):
                                         "Inventory").grocery_widgets[k].count
                                     screen.manager.get_screen("Inventory").grocery_widgets[
                                         k].count += 1
-                                    firebase.put('/', k, str(c + 1))
                                     print "%s matches %s" % (word, k)
                                     #this allows us to break the entire sentence to avoid duplicates
                                     found = True
