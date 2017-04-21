@@ -281,7 +281,7 @@ class RawKivyCamera(Image):
                     match = process.extractOne(word, all_values)
                     # match[0] is value, match[1] is score
                     if match is not None:
-                        if match[1] >= 50:  # only care about those that have a high-enough score
+                        if match[1] > 75:  # only care about those that have a high-enough score
                             for k, v in choices.iteritems():
                                 if match[0] in v:
                                     # add the count to the inventory
