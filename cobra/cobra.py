@@ -82,6 +82,7 @@ class InventoryScreen(Screen):
     def update_inventory(self, *args):
         """ updates the local inventory with the updated values from the receipt scanned """
         # clear items to reset the addition of widgets
+        self.overall_layout.remove_widget(self.empty_label)
         self.inventory.clear_widgets()
         for widget in self.grocery_widgets.itervalues():
             if widget.count > 0:
@@ -127,7 +128,7 @@ class InventoryScreen(Screen):
             self.inventory.height = 300 * len(self.inventory.children) / 3
             self.overall_layout.add_widget(self.bottom_layout)
         self.canvas.ask_update()
-    
+
     def changeScreen(self, *args):
         """ Changes the screen to CameraScreen. """
         self.manager.current = "Camera"
