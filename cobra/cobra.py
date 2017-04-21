@@ -80,6 +80,7 @@ class InventoryScreen(Screen):
     def update_from_server(self, *args):
         """ Pull the data from the server and call the updating as a separate process """
         self.empty_label.text = "Loading items!"
+        self.overall_layout.add_widget(self.empty_label)
         Clock.schedule_once(self.update_groceries, 1)
 
     def update_groceries(self, *args):
