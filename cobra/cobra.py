@@ -69,7 +69,8 @@ class InventoryScreen(Screen):
         self.inventory = GridLayout(cols=3, spacing=(125, 50), size_hint=(
             None, None), padding=30, size=(800, 380))
 
-        self.bind(on_pre_enter=self.update_from_server)
+        #self.bind(on_pre_enter=self.update_from_server)
+        self.update_from_server()
 
         scroller = ScrollView(size=(800, 370))
         scroller.add_widget(self.inventory)
@@ -80,14 +81,16 @@ class InventoryScreen(Screen):
     def update_from_server(self, *args):
         """ Pull the data from the server and call the updating as a separate process """
         self.empty_label.text = "Loading items!"
-        self.overall_layout.add_widget(self.empty_label)
+        self.overall_layout.add_widget(self.empty_label, 1)
+        # show loading message while obtaining from firebase.
+        # could make it read locally but kivy is clunky
+        self.inventory.clear_widgets()
         Clock.schedule_once(self.update_groceries, 1)
 
     def update_groceries(self, *args):
         """ Update the groceries according to Firebase. """
         # clear items to reset the addition of widgets
         self.overall_layout.clear_widgets()
-        self.inventory.clear_widgets()
         self.overall_layout.add_widget(self.topbox)
         # add the grocery item to the "fridge" if it exists on Firebase
         # add the updated value from firebase + default values instantiated
