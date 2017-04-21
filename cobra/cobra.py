@@ -85,7 +85,7 @@ class InventoryScreen(Screen):
         # show loading message while obtaining from firebase.
         # could make it read locally but kivy is clunky
         self.inventory.clear_widgets()
-        Clock.schedule_once(self.update_groceries, 1)
+        Clock.schedule_once(self.update_groceries, 3)
 
     def update_groceries(self, *args):
         """ Update the groceries according to Firebase. """
@@ -149,6 +149,7 @@ class CameraScreen(Screen):
     def changeScreen(self, *args):
         """ Change the screen back to the InventoryScreen. """
         self.manager.current = "Inventory"
+        self.manager.transition.direction = "right"
 
     def start_cam(self, *args):
         """ Starts the camera """
