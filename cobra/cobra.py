@@ -118,10 +118,10 @@ class InventoryScreen(Screen):
 
     def reset_layout(self, *args):
         """ Reset the layout to update widgets """
-        self.empty_label.text = "Loading items!"
-        self.overall_layout.add_widget(self.empty_label, 1)
         self.inventory.clear_widgets()
         self.overall_layout.clear_widgets()
+        self.empty_label.text = "Loading items!"
+        self.overall_layout.add_widget(self.empty_label, 1)
         self.overall_layout.add_widget(self.topbox)
 
     def update_inventory_canvas(self, *args):
