@@ -82,8 +82,11 @@ class InventoryScreen(Screen):
     def update_inventory(self, *args):
         """ updates the local inventory with the updated values from the receipt scanned """
         # clear items to reset the addition of widgets
-        self.overall_layout.remove_widget(self.empty_label)
         self.inventory.clear_widgets()
+        # clear items to reset the addition of widgets
+        self.overall_layout.clear_widgets()
+        self.overall_layout.add_widget(self.topbox)
+
         for widget in self.grocery_widgets.itervalues():
             if widget.count > 0:
                 self.show_empty = False
