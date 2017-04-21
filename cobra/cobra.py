@@ -51,7 +51,7 @@ class InventoryScreen(Screen):
             orientation='vertical', size=(800, 480), size_hint=(1, None))
         self.topbox = BoxLayout(orientation='horizontal',
                                 height=100, size_hint=(1, None))
-        label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60)
+        label = Label(text='Inventory', color=(0, 0, 0, 1), font_size=60, font_name="assets/ailerons.otf")
         camera = ButtonWithImage(logo="assets/camera.png", text="Scan Receipt", on_press=self.changeScreen)
         self.topbox.add_widget(label)
         self.topbox.add_widget(camera)
