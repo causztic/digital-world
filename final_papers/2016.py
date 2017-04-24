@@ -67,20 +67,9 @@ class RingCounter(sm.SM):
         self.startState = 0
 
     def convert(self, state):
-        if state == 1:
-            return "001"
-        elif state == 2:
-            return "010"
-        elif state == 3:
-            return "011"
-        elif state == 4:
-            return "100"
-        elif state == 5:
-            return "101"
-        elif state == 6:
-            return "110"
-        elif state == 7:
-            return "111"
+        d =  {0:"000", 1: "001", 2: "010", 3: "011", 4: "100", 5: "101", 6: "110", 7: "111"}
+        if state in d.keys():
+            return d[state]
         else:
             return "000"
 
